@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Binding -->
+<thing:thing-descriptions bindingId="mylight"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- -->
+	<!-- MyLight SmartBattery thing -->
+	<!-- -->
+	<thing-type id="smart-battery">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="mylight"/>
+		</supported-bridge-type-refs>
+		<label>@text/thing-type.mylight.smart-battery.label</label>
+		<description>@text/thing-type.mylight.smart-battery.description</description>
+		<category>Electricity</category>
+		<channels>
+			<channel id="name" typeId="name"/>
+			<channel id="charge-level" typeId="charge">
+				<label>@text/channel-type.mylight.smart-battery.charge-level.label</label>
+			</channel>
+		</channels>
+		<properties>
+			<property name="vendor">MyLight</property>
+			<property name="subscribed-capacity"/>
+		</properties>
+		<representation-property>zoneUniqueId</representation-property>
+		<config-description-ref uri="thing-type:mylight:smart-battery"/>
+	</thing-type>
+</thing:thing-descriptions>

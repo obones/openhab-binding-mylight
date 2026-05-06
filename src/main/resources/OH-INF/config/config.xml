@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Binding -->
+<config-description:config-descriptions
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0
+	https://openhab.org/schemas/config-description-1.0.0.xsd">
+	<!-- -->
+	<!-- MyLight Bridge -->
+	<!-- -->
+	<config-description uri="bridge-type:mylight:bridge">
+		<parameter name="baseURI" type="text" required="true">
+			<label>@text/config.mylight.bridge.baseURI.label</label>
+			<description>@text/config.mylight.bridge.baseURI.description</description>
+			<default>https://myhome.mylight-systems.com/api/</default>
+			<advanced>true</advanced>
+		</parameter>
+		<parameter name="email" type="text" required="true">
+			<label>@text/config.mylight.bridge.email.label</label>
+			<description>@text/config.mylight.bridge.email.description</description>
+		</parameter>
+		<parameter name="password" type="text" required="true">
+			<label>@text/config.mylight.bridge.password.label</label>
+			<description>@text/config.mylight.bridge.password.description</description>
+		</parameter>
+		<parameter name="refreshInterval" type="integer" min="1" unit="min">
+			<label>@text/config.mylight.bridge.refreshInterval.label</label>
+			<description>@text/config.mylight.bridge.refreshInterval.description</description>
+			<default>60</default>
+		</parameter>
+	</config-description>
+	<!-- -->
+	<!-- MyLight SmartBattery -->
+	<!-- -->
+	<config-description uri="thing-type:mylight:smart-battery">
+	</config-description>
+
+</config-description:config-descriptions>

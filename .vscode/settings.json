@@ -1,0 +1,26 @@
+{
+    "mvn_bin_path": "E:\\Downloads\\Prog\\java\\apache-maven-3.9.6\\bin",
+    "Custom_JAVA_HOME": "E:\\Downloads\\Prog\\java\\jdk-21.0.10+7",
+    "openhab_home": "E:\\tests\\ohab\\openhab-4.2.0-SNAPSHOT.20240620",
+    "openhab_runtime": "E:\\tests\\ohab\\openhab-4.2.0-SNAPSHOT.20240620\\runtime",
+    "openhab_addons": "E:\\tests\\ohab\\openhab-4.2.0-SNAPSHOT.20240620\\addons",
+    "openhab_logs": "E:\\tests\\ohab\\openhab-4.2.0-SNAPSHOT.20240620\\userdata\\logs",
+    "maven.executable.preferMavenWrapper": false,
+    "maven.terminal.customEnv": [
+        {
+            "environmentVariable": "JAVA_HOME",                
+            "value": "${config:Custom_JAVA_HOME}"
+        }
+    ],
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cSpell.words": [
+        "mylight",
+        "openhab"
+    ],
+    "cSpell.ignoreWords": [
+    ],
+    "files.watcherExclude": {
+        "**/target": true
+    }
+}

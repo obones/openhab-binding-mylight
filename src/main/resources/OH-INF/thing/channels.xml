@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Binding -->
+<thing:thing-descriptions bindingId="mylight"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- Channel Type - of Binding -->
+
+	<!-- Channel Type - of Bridge -->
+
+	<!-- Channel Type - of SmartBattery -->
+	<channel-type id="charge-level">
+		<item-type>Number:Dimensionless</item-type>
+		<label>@text/channel-type.mylight.smart-battery.charge-level.label</label>
+		<description>@text/channel-type.mylight.smart-battery.charge-level.label</description>
+		<category>StateOfCharge</category>
+		<tags>
+			<tag>Measurement</tag>
+			<tag>StateOfCharge</tag>
+		</tags>
+		<state pattern="%.1f %%" readOnly="true"/>
+	</channel-type>
+
+</thing:thing-descriptions>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Bridge Things Binding -->
+<thing:thing-descriptions bindingId="mylight"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- MyLight Bridge Binding -->
+	<bridge-type id="mylight">
+		<label>@text/bridge-type.mylight.mylight.label</label>
+		<description>@text/bridge-type.mylight.mylight.description</description>
+
+		<channels>
+			<channel id="last-updated" typeId="time-stamp">
+				<label>@text/channel.mylight.mylight.last-updated.label</label>
+				<description>@text/channel.mylight.mylight.last-updated.description</description>
+			</channel>
+		</channels>
+
+		<properties>
+			<property name="vendor">MyLight</property>
+			<property name="apiVersion"/>
+		</properties>
+
+		<config-description-ref uri="bridge-type:mylight:bridge"/>
+
+	</bridge-type>
+
+</thing:thing-descriptions>
