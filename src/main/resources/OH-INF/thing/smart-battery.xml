@@ -16,8 +16,7 @@
 		<description>@text/thing-type.mylight.smart-battery.description</description>
 		<category>Electricity</category>
 		<channels>
-			<channel id="name" typeId="name"/>
-			<channel id="charge-level" typeId="charge">
+			<channel id="charge-level" typeId="charge-level">
 				<label>@text/channel-type.mylight.smart-battery.charge-level.label</label>
 			</channel>
 		</channels>
