@@ -22,6 +22,7 @@
 		<parameter name="password" type="text" required="true">
 			<label>@text/config.mylight.bridge.password.label</label>
 			<description>@text/config.mylight.bridge.password.description</description>
+			<context>password</context>
 		</parameter>
 		<parameter name="refreshInterval" type="integer" min="1" unit="min">
 			<label>@text/config.mylight.bridge.refreshInterval.label</label>
