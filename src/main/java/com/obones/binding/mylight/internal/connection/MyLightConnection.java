@@ -12,7 +12,6 @@
 package com.obones.binding.mylight.internal.connection;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The {@link MyLightConnection} represents a connection to the MyLight API and provides answers

@@ -61,8 +61,8 @@ import org.slf4j.LoggerFactory;
 
 import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
-import com.obones.binding.mylight.internal.utils.Localization;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
+import com.obones.binding.mylight.internal.utils.Localization;
 
 /***
  * The{@link MyLightBaseThingHandler} is the base class for all MyLight thing handlers
@@ -326,8 +326,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
                 if (command instanceof RefreshType) {
                     updateChannel(channelUID);
                 } else {
-                    logger.debug("The MyLight binding is a read-only binding and cannot handle command '{}'.",
-                            command);
+                    logger.debug("The MyLight binding is a read-only binding and cannot handle command '{}'.", command);
                 }
             }
         }
@@ -362,8 +361,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      * @throws CommunicationException if there is a problem retrieving the data
      * @throws ConfigurationException if there is a configuration error
      */
-    protected boolean requestData(MyLightConnection connection)
-            throws CommunicationException, ConfigurationException {
+    protected boolean requestData(MyLightConnection connection) throws CommunicationException, ConfigurationException {
         logger.debug("Update weather and forecast data of thing '{}'.", getThing().getUID());
 
         var location = this.location;

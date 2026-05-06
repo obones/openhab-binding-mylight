@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier 
+ * Copyright (c) 2023-2024 Olivier Sannier
  ** See the NOTICE file(s) distributed with this work for additional
  * information.
  *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. 
- * If a copy of the MPL was not distributed with this file, 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
  * you can obtain one at https://mozilla.org/MPL/2.0/.
  *
  * SPDX-License-Identifier: MPL-2.0
@@ -78,8 +78,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
 
     public MyLightBridgeHandler(final Bridge bridge, Localization localization) {
         super(bridge);
-        logger.trace("MyLightBridgeHandler(constructor with bridge={}, localization={}) called.", bridge,
-                localization);
+        logger.trace("MyLightBridgeHandler(constructor with bridge={}, localization={}) called.", bridge, localization);
         this.localization = localization;
         logger.debug("Creating a MyLightBridgeHandler for thing '{}'.", getThing().getUID());
     }
@@ -100,8 +99,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         MyLightBridgeConfiguration config = getConfigAs(MyLightBridgeConfiguration.class);
 
         boolean configIsValid = validateConfig(config);
-        if (!configIsValid)
-        {
+        if (!configIsValid) {
             logger.warn("initialize(): config is invalid, aborting initialization");
             return;
         }
@@ -197,11 +195,10 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         }
     }
 
-    private boolean validateConfig(MyLightBridgeConfiguration config)
-    {
-        return (config.baseURI != null && !config.baseURI.trim().isEmpty()) &&
-                (config.refreshInterval > 0) &&
-                (config.email != null && !config.email.trim().isEmpty()) &&
+    private boolean validateConfig(MyLightBridgeConfiguration config) {
+        return (config.baseURI != null && !config.baseURI.trim().isEmpty()) && //
+                (config.refreshInterval > 0) && //
+                (config.email != null && !config.email.trim().isEmpty()) && //
                 (config.password != null && !config.password.trim().isEmpty());
     }
 }

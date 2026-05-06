@@ -34,7 +34,6 @@ public class MyLightHttpConnection implements MyLightConnection {
 
     private String baseURI;
 
-    
     public MyLightHttpConnection(String baseURI) {
         this.baseURI = baseURI;
     }
@@ -69,22 +68,13 @@ public class MyLightHttpConnection implements MyLightConnection {
         }
     }
 
-    public MyLightRoomsApiResponse getRooms()
-    {
+    public MyLightRoomsApiResponse getRooms() {
         @Nullable
         URI uri = getUri();
         if (uri == null)
             return new MyLightRoomsApiResponse();
 
         UriBuilder builder = prepareUriBuilder(uri, "api");
-
-        /*if (dailyDays != null) {
-            builder.queryParam("forecast_days", dailyDays);
-            builder.queryParam("daily", String.join(",", requiredDailyFields));
-            if (pastDays != null) {
-                builder.queryParam("past_days", pastDays);
-            }
-        }*/
 
         return getResponse(builder);
     }

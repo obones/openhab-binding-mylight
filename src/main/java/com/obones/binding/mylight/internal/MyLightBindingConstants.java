@@ -57,8 +57,8 @@ public class MyLightBindingConstants {
 
     // Definitions of different set of Things
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_BRIDGE = new HashSet<>(Arrays.asList(THING_TYPE_BRIDGE));
-    public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(Arrays.asList(
-            THING_TYPE_MYLIGHT_SMART_BATTERY));
+    public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(
+            Arrays.asList(THING_TYPE_MYLIGHT_SMART_BATTERY));
 
     // List of all bridge channel ids
 

@@ -13,15 +13,10 @@ package com.obones.binding.mylight.internal.handler;
 
 import static com.obones.binding.mylight.internal.MyLightBindingConstants.*;
 
-import java.util.Objects;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.i18n.CommunicationException;
 import org.openhab.core.i18n.ConfigurationException;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.types.DecimalType;
-import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.PointType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
@@ -78,47 +73,9 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
      * @param channelUID UID of the channel
      */
     protected void updateChannel(ChannelUID channelUID) {
-        String channelGroupId = Objects.requireNonNullElse(channelUID.getGroupId(), "");
-        logger.debug("MyLightSmartBatteryThingHandler: updateChannel {}, groupID {}", channelUID, channelGroupId);
-
-        switch (channelGroupId) {
-            /*case CHANNEL_GROUP_HOURLY_TIME_SERIES:
-                updateHourlyTimeSeries(channelUID);
-                break;
-            case CHANNEL_GROUP_DAILY_TIME_SERIES:
-                updateDailyTimeSeries(channelUID);
-                break;
-            case CHANNEL_GROUP_DAILY_TODAY:
-                updateDailyChannel(channelUID, 0);
-                break;
-            case CHANNEL_GROUP_DAILY_TOMORROW:
-                updateDailyChannel(channelUID, 1);
-                break;
-            case CHANNEL_GROUP_CURRENT:
-                updateCurrentChannel(channelUID);
-                break;
-            case CHANNEL_GROUP_MINUTELY_15:
-                updateMinutely15TImeSeries(channelUID);
-                break;
-            default:
-                Matcher hourlyForecastMatcher = CHANNEL_GROUP_HOURLY_FORECAST_PREFIX_PATTERN.matcher(channelGroupId);
-                if (hourlyForecastMatcher.find()) {
-                    int i = Integer.parseInt(hourlyForecastMatcher.group(1));
-                    updateHourlyChannel(channelUID, (i - 1));
-                    break;
-                }
-                Matcher dailyForecastMatcher = CHANNEL_GROUP_DAILY_FORECAST_PREFIX_PATTERN.matcher(channelGroupId);
-                if (dailyForecastMatcher.find()) {
-                    int i = Integer.parseInt(dailyForecastMatcher.group(1));
-                    updateDailyChannel(channelUID, i);
-                    break;
-                }
-                break;*/
-        }
+        logger.debug("MyLightSmartBatteryThingHandler: updateChannel {}", channelUID);
     }
 
-    protected void initializeChannels(ThingHandlerCallback callback, ThingBuilder builder, ThingUID thingUID)
-    {
-
+    protected void initializeChannels(ThingHandlerCallback callback, ThingBuilder builder, ThingUID thingUID) {
     }
 }

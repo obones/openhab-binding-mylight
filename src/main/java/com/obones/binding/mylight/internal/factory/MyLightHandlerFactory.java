@@ -100,7 +100,8 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     }
 
     private @Nullable ThingHandler createSmartBatteryThingHandler(Thing thing) {
-        logger.trace("createSmartBatteryThingHandler({}) called for thing named '{}'.", thing.getUID(), thing.getLabel());
+        logger.trace("createSmartBatteryThingHandler({}) called for thing named '{}'.", thing.getUID(),
+                thing.getLabel());
         return new MyLightSmartBatteryThingHandler(thing, localization, timeZoneProvider, channelTypeRegistry);
     }
 
@@ -112,8 +113,7 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
             final @Reference TimeZoneProvider givenTimeZoneProvider,
             final @Reference ChannelTypeRegistry givenChannelTypeRegistry,
             final @Reference LocationProvider givenLocationProvider) {
-        logger.trace("MyLightHandlerFactory(locale={},translation={}) called.", givenLocaleProvider,
-                givenI18nProvider);
+        logger.trace("MyLightHandlerFactory(locale={},translation={}) called.", givenLocaleProvider, givenI18nProvider);
         localeProvider = givenLocaleProvider;
         i18nProvider = givenI18nProvider;
         timeZoneProvider = givenTimeZoneProvider;

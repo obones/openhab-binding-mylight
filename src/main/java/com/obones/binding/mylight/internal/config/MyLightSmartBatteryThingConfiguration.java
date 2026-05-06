@@ -13,7 +13,6 @@
 package com.obones.binding.mylight.internal.config;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 
 @NonNullByDefault
 public class MyLightSmartBatteryThingConfiguration extends MyLightBaseThingConfiguration {

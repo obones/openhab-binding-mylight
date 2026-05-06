@@ -142,8 +142,6 @@ public class MyLightDiscoveryService extends AbstractDiscoveryService {
     private void createSmartBatteryResult(String location, ThingUID bridgeUID) {
         thingDiscovered(DiscoveryResultBuilder
                 .create(new ThingUID(THING_TYPE_MYLIGHT_SMART_BATTERY, bridgeUID, SYSTEM_LOCATION_THING_ID))
-                .withLabel("@text/discovery.forecast.system.label")//.withProperty(PROPERTY_THING_LOCATION, location)
-                //.withRepresentationProperty(PROPERTY_THING_LOCATION)
-                .withBridge(bridgeUID).build());
+                .withLabel("@text/discovery.forecast.system.label").withBridge(bridgeUID).build());
     }
 }
