@@ -59,7 +59,6 @@ import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.utils.Localization;
@@ -125,23 +124,6 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     protected synchronized boolean validateConfig() {
-        MyLightBaseThingConfiguration config = getConfigAs(MyLightBaseThingConfiguration.class);
-        if (config.location.trim().isEmpty()) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "@text/offline.conf-error-missing-location");
-            return false;
-        }
-
-        try {
-            location = new PointType(config.location);
-        } catch (IllegalArgumentException e) {
-            logger.warn("Error parsing 'location' parameter: {}", e.getMessage());
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "@text/offline.conf-error-parsing-location");
-            location = null;
-            return false;
-        }
-
         return true;
     }
 
