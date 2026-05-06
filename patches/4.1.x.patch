@@ -7,6 +7,19 @@ index 596c980..bc1b286 100644
  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 -    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 +  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
- 
+
    <modelVersion>4.0.0</modelVersion>
+
+diff --git a/src/main/java/com/obones/binding/mylight/internal/discovery/MyLightDiscoveryService.java b/src/main/java/com/obones/binding/mylight/internal/discovery/MyLightDiscoveryService.java
+index f7b59ac..6f2f5ac 100644
+--- a/src/main/java/com/obones/binding/mylight/internal/discovery/MyLightDiscoveryService.java
++++ b/src/main/java/com/obones/binding/mylight/internal/discovery/MyLightDiscoveryService.java
+@@ -78,7 +78,7 @@ public class MyLightDiscoveryService extends AbstractDiscoveryService {
+     @Override
+     public void deactivate() {
+         logger.debug("Removing older discovery services.");
+-        removeOlderResults(Instant.now(), bridgeHandler.getThing().getUID());
++        removeOlderResults(Instant.now().toEpochMilli(), bridgeHandler.getThing().getUID());
+         super.deactivate();
+     }
  
