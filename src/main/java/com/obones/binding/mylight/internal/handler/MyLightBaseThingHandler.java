@@ -100,8 +100,6 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
             boolean configValid = validateConfig();
 
             if (configValid) {
-                initializeProperties();
-
                 logger.trace("initialize() updating ThingStatus to ONLINE.");
                 updateStatus(ThingStatus.ONLINE);
             }
@@ -114,20 +112,6 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
     protected synchronized boolean validateConfig() {
         return true;
-    }
-
-    protected synchronized void initializeProperties() {
-        Bridge bridge = getBridge();
-        if (bridge != null) {
-            MyLightBridgeHandler bridgeHandler = (MyLightBridgeHandler) bridge.getHandler();
-            if (bridgeHandler != null) {
-                initializeProperties(bridgeHandler);
-            }
-        }
-        logger.trace("initializeProperties() done.");
-    }
-
-    protected void initializeProperties(MyLightBridgeHandler bridgeHandler) {
     }
 
     @Override
