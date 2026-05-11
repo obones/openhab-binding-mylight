@@ -41,8 +41,6 @@ public class MyLightBindingConstants {
      */
     private static final String THING_MYLIGHT_SMART_BATTERY = "smart-battery";
 
-    // Channel group type ids
-
     // Discovered things id
     public static final String SYSTEM_LOCATION_THING_ID = "system";
 
@@ -66,6 +64,10 @@ public class MyLightBindingConstants {
 
     // Thing properties
     public static final String PROPERTY_THING_LAST_UPDATED = "last-updated";
+
+    // SmartBattery thing properties
+    public static final String PROPERTY_SMART_BATTERY_ID = "id";
+    public static final String PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY = "subscribed-capacity";
 
     // List of all bridge channel/ids
     public static final String CHANNEL_BRIDGE_LAST_UPDATED = "last-updated";

@@ -32,7 +32,6 @@ import org.openhab.core.thing.ThingTypeUID;
 import org.openhab.core.thing.binding.BaseThingHandlerFactory;
 import org.openhab.core.thing.binding.ThingHandler;
 import org.openhab.core.thing.binding.ThingHandlerFactory;
-import org.openhab.core.thing.type.ChannelTypeRegistry;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -60,7 +59,6 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
 
     private @NonNullByDefault({}) LocaleProvider localeProvider;
     private @NonNullByDefault({}) TranslationProvider i18nProvider;
-    private ChannelTypeRegistry channelTypeRegistry;
     private TimeZoneProvider timeZoneProvider;
     private final LocationProvider locationProvider;
     private Localization localization = Localization.UNKNOWN;
@@ -106,7 +104,7 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     private @Nullable ThingHandler createSmartBatteryThingHandler(Thing thing) {
         logger.trace("createSmartBatteryThingHandler({}) called for thing named '{}'.", thing.getUID(),
                 thing.getLabel());
-        return new MyLightSmartBatteryThingHandler(thing, localization, timeZoneProvider, channelTypeRegistry);
+        return new MyLightSmartBatteryThingHandler(thing, localization, timeZoneProvider);
     }
 
     // Constructor
@@ -115,14 +113,12 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     public MyLightHandlerFactory(final @Reference LocaleProvider givenLocaleProvider,
             final @Reference TranslationProvider givenI18nProvider,
             final @Reference TimeZoneProvider givenTimeZoneProvider,
-            final @Reference ChannelTypeRegistry givenChannelTypeRegistry,
             final @Reference LocationProvider givenLocationProvider,
             final @Reference HttpClientFactory httpClientFactory) {
         logger.trace("MyLightHandlerFactory(locale={},translation={}) called.", givenLocaleProvider, givenI18nProvider);
         localeProvider = givenLocaleProvider;
         i18nProvider = givenI18nProvider;
         timeZoneProvider = givenTimeZoneProvider;
-        channelTypeRegistry = givenChannelTypeRegistry;
         locationProvider = givenLocationProvider;
         this.httpClient = httpClientFactory.getCommonHttpClient();
     }

@@ -22,10 +22,6 @@ import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
-import org.openhab.core.thing.ThingUID;
-import org.openhab.core.thing.binding.ThingHandlerCallback;
-import org.openhab.core.thing.binding.builder.ThingBuilder;
-import org.openhab.core.thing.type.ChannelTypeRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +47,8 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     private MyLightStatesApiResponse states = null;
 
     public MyLightSmartBatteryThingHandler(Thing thing, Localization localization,
-            final TimeZoneProvider timeZoneProvider, ChannelTypeRegistry channelTypeRegistry) {
-        super(thing, localization, timeZoneProvider, channelTypeRegistry);
+            final TimeZoneProvider timeZoneProvider) {
+        super(thing, localization, timeZoneProvider);
         logger.trace("MyLightSmartBatteryHandler(thing={},localization={}) constructor called.", thing, localization);
     }
 
@@ -68,10 +64,7 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         return result;
     }
 
-    protected boolean refreshData(MyLightConnection connection, String authToken)
-            throws CommunicationException, ConfigurationException {
-        MyLightSmartBatteryThingConfiguration config = getConfigAs(MyLightSmartBatteryThingConfiguration.class);
-
+    private void ensureValidBatteryId(MyLightConnection connection, String authToken) {
         if (batteryId == null) {
             var rooms = connection.getRooms(authToken);
             for (var room : rooms) {
@@ -79,10 +72,20 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
                     if (device.type_id.equals("my_smart_battery")) {
                         batteryId = device.device_id;
                         batteryCapacity = device.batteryCapacity;
+
+                        thing.setProperty(PROPERTY_SMART_BATTERY_ID, batteryId);
+                        thing.setProperty(PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY, Double.toString(batteryCapacity));
+
+                        return;
                     }
                 }
             }
         }
+    }
+
+    protected boolean refreshData(MyLightConnection connection, String authToken)
+            throws CommunicationException, ConfigurationException {
+        ensureValidBatteryId(connection, authToken);
 
         if (batteryId != null) {
             states = connection.getStates(authToken);
@@ -120,8 +123,5 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
                 }
                 break;
         }
-    }
-
-    protected void initializeChannels(ThingHandlerCallback callback, ThingBuilder builder, ThingUID thingUID) {
     }
 }

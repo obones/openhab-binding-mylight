@@ -41,17 +41,9 @@ import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
 import org.openhab.core.thing.ThingStatusDetail;
 import org.openhab.core.thing.ThingStatusInfo;
-import org.openhab.core.thing.ThingUID;
 import org.openhab.core.thing.binding.BaseThingHandler;
 import org.openhab.core.thing.binding.BridgeHandler;
-import org.openhab.core.thing.binding.ThingHandlerCallback;
-import org.openhab.core.thing.binding.builder.ChannelBuilder;
-import org.openhab.core.thing.binding.builder.ThingBuilder;
-import org.openhab.core.thing.type.AutoUpdatePolicy;
 import org.openhab.core.thing.type.ChannelKind;
-import org.openhab.core.thing.type.ChannelType;
-import org.openhab.core.thing.type.ChannelTypeRegistry;
-import org.openhab.core.thing.type.ChannelTypeUID;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.RefreshType;
 import org.openhab.core.types.State;
@@ -73,19 +65,16 @@ import com.obones.binding.mylight.internal.utils.Localization;
 public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
     protected @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
-    protected ChannelTypeRegistry channelTypeRegistry;
     protected @Nullable MyLightRoomsApiResponse roomsData = null;
     protected final TimeZoneProvider timeZoneProvider;
     protected static final Gson gson = new Gson();
 
     public Localization localization;
 
-    public MyLightBaseThingHandler(Thing thing, Localization localization, final TimeZoneProvider timeZoneProvider,
-            ChannelTypeRegistry channelTypeRegistry) {
+    public MyLightBaseThingHandler(Thing thing, Localization localization, final TimeZoneProvider timeZoneProvider) {
         super(thing);
         this.localization = localization;
         this.timeZoneProvider = timeZoneProvider;
-        this.channelTypeRegistry = channelTypeRegistry;
         logger.trace("MyLightSmartBatteryHandler(thing={},localization={}) constructor called.", thing, localization);
     }
 
@@ -139,105 +128,6 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     protected void initializeProperties(MyLightBridgeHandler bridgeHandler) {
-    }
-
-    protected synchronized void initializeChannels() {
-        Bridge bridge = getBridge();
-        if (bridge != null) {
-            MyLightBridgeHandler bridgeHandler = (MyLightBridgeHandler) bridge.getHandler();
-            if (bridgeHandler == null) {
-                logger.warn("initializeOptionalChannels: Could not get bridge handler");
-                return;
-            }
-
-            initializeChannels(bridgeHandler);
-        }
-    }
-
-    protected abstract void initializeChannels(ThingHandlerCallback callback, ThingBuilder builder, ThingUID thingUID);
-
-    protected void initializeChannels(MyLightBridgeHandler bridgeHandler) {
-        ThingHandlerCallback callback = getCallback();
-        if (callback == null) {
-            logger.warn("initializeOptionalChannels: Could not get callback.");
-            return;
-        }
-
-        ThingBuilder builder = editThing();
-        ThingUID thingUID = thing.getUID();
-
-        // Remove every channel and rebuild only the required ones, this makes for easier to read code
-        // and has no impact until the build() method is called
-        builder.withoutChannels(thing.getChannels());
-
-        initializeChannels(callback, builder, thingUID);
-
-        updateThing(builder.build());
-    }
-
-    protected ThingBuilder initializeOptionalChannel(ThingHandlerCallback callback, ThingBuilder builder,
-            ThingUID thingUID, String channelGroupId, String channelId, ChannelTypeUID channelTypeUID, boolean isActive,
-            AutoUpdatePolicy autoUpdatePolicy, @Nullable String labelKey, @Nullable String descriptionKey,
-            Object @Nullable [] labelArguments, Object @Nullable [] descriptionArguments) {
-        ChannelUID channelUID = new ChannelUID(thing.getUID(), channelGroupId, channelId);
-        ChannelBuilder channelBuilder = callback.createChannelBuilder(channelUID, channelTypeUID);
-        ChannelType channelType = channelTypeRegistry.getChannelType(channelTypeUID);
-
-        if (channelType == null) {
-            logger.error("Unable to retrieve ChannelType instance for UID [{}].", channelTypeUID.getAsString());
-            return builder;
-        }
-
-        String labelText = (labelKey != null) ? localization.getText(labelKey) : channelType.getLabel();
-        if (labelArguments != null)
-            labelText = String.format(labelText, labelArguments);
-
-        @Nullable
-        String descriptionText = (descriptionKey != null) ? localization.getText(descriptionKey)
-                : channelType.getDescription();
-        if (descriptionText != null) {
-            if (descriptionArguments != null)
-                descriptionText = String.format(descriptionText, descriptionArguments);
-
-            channelBuilder.withDescription(descriptionText);
-        }
-
-        channelBuilder.withAutoUpdatePolicy(autoUpdatePolicy).withLabel(labelText);
-
-        Channel channel = channelBuilder.build();
-
-        builder = builder.withoutChannel(channelUID);
-
-        return (isActive) ? builder.withChannel(channel) : builder;
-    }
-
-    protected ThingBuilder initializeOptionalChannel(ThingHandlerCallback callback, ThingBuilder builder,
-            ThingUID thingUID, String channelGroupId, String channelId, ChannelTypeUID channelTypeUID, boolean isActive,
-            @Nullable String labelKey, @Nullable String descriptionKey, Object @Nullable [] labelArguments,
-            Object @Nullable [] descriptionArguments) {
-        return initializeOptionalChannel(callback, builder, thingUID, channelGroupId, channelId, channelTypeUID,
-                isActive, AutoUpdatePolicy.DEFAULT, labelKey, descriptionKey, labelArguments, descriptionArguments);
-    }
-
-    protected ThingBuilder initializeOptionalChannel(ThingHandlerCallback callback, ThingBuilder builder,
-            ThingUID thingUID, String channelGroupId, String channelId, ChannelTypeUID channelTypeUID, boolean isActive,
-            @Nullable String labelKey, @Nullable String descriptionKey) {
-        return initializeOptionalChannel(callback, builder, thingUID, channelGroupId, channelId, channelTypeUID,
-                isActive, labelKey, descriptionKey, null, null);
-    }
-
-    protected ThingBuilder initializeOptionalChannel(ThingHandlerCallback callback, ThingBuilder builder,
-            ThingUID thingUID, String channelGroupId, String channelId, ChannelTypeUID channelTypeUID, boolean isActive,
-            Object @Nullable [] labelArguments) {
-        return initializeOptionalChannel(callback, builder, thingUID, channelGroupId, channelId, channelTypeUID,
-                isActive, null, null, labelArguments, null);
-    }
-
-    protected ThingBuilder initializeOptionalChannel(ThingHandlerCallback callback, ThingBuilder builder,
-            ThingUID thingUID, String channelGroupId, String channelId, ChannelTypeUID channelTypeUID,
-            boolean isActive) {
-        return initializeOptionalChannel(callback, builder, thingUID, channelGroupId, channelId, channelTypeUID,
-                isActive, null);
     }
 
     @Override
@@ -353,20 +243,19 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     /**
-     * Updates all channels of this handler from the latest MyLight data retrieved.
+     * Updates all channels of this handler from the latest retrieved MyLight data.
      */
     private void updateChannels() {
         for (Channel channel : getThing().getChannels()) {
             ChannelUID channelUID = channel.getUID();
-            if (ChannelKind.STATE.equals(channel.getKind()) && channelUID.isInGroup() && channelUID.getGroupId() != null
-                    && isLinked(channelUID)) {
+            if (ChannelKind.STATE.equals(channel.getKind()) && isLinked(channelUID)) {
                 updateChannel(channelUID);
             }
         }
     }
 
     /**
-     * Updates the channel with the given UID from the latest MyLight data retrieved.
+     * Updates the channel with the given UID from the latest retrieved MyLight data.
      *
      * @param channelUID UID of the channel
      */
