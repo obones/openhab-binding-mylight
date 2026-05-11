@@ -1,1 +1,5 @@
 /.vscode/settings.json
+*.bak
+/src/main/history
+/target
+/.metals

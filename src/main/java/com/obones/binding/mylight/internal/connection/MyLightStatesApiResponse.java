@@ -10,13 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.obones.binding.mylight.internal.config;
+package com.obones.binding.mylight.internal.connection;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import java.util.ArrayList;
 
-@NonNullByDefault
-public class MyLightBaseThingConfiguration {
-    /*
-     * Default values - should not be modified
-     */
+import com.obones.binding.mylight.internal.connection.api.MyLightState;
+
+public class MyLightStatesApiResponse extends ArrayList<MyLightState> {
+
 }

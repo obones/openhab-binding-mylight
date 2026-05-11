@@ -1,6 +1,7 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
- ** See the NOTICE file(s) distributed with this work for additional
+ * Copyright (c) 2026 Olivier Sannier
+ *
+ * See the NOTICE file(s) distributed with this work for additional
  * information.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -20,5 +21,19 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 @NonNullByDefault
 public interface MyLightConnection {
-    MyLightRoomsApiResponse getRooms();
+    public class LoginResult {
+        public boolean successful;
+        public String serverReply = "";
+
+        public LoginResult(boolean successful, String serverReply) {
+            this.successful = successful;
+            this.serverReply = serverReply;
+        }
+    }
+
+    LoginResult login(String email, String password);
+
+    MyLightRoomsApiResponse getRooms(String authToken);
+
+    MyLightStatesApiResponse getStates(String authToken);
 }

@@ -10,13 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.obones.binding.mylight.internal.config;
+package com.obones.binding.mylight.internal.connection.api;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
-
-@NonNullByDefault
-public class MyLightBaseThingConfiguration {
-    /*
-     * Default values - should not be modified
-     */
+public class MyLightRoomDevice {
+    public String device_id;
+    public String type_id;
+    public Double batteryCapacity;
 }

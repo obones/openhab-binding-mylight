@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
+ * Copyright (c) 2026 Olivier Sannier
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.
@@ -53,14 +53,13 @@ public class MyLightBindingConstants {
     public static final ThingTypeUID THING_TYPE_MYLIGHT_SMART_BATTERY = new ThingTypeUID(BINDING_ID,
             THING_MYLIGHT_SMART_BATTERY);
 
-    // List of all Channel Group Type UIDs
-
     // Definitions of different set of Things
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_BRIDGE = new HashSet<>(Arrays.asList(THING_TYPE_BRIDGE));
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(
             Arrays.asList(THING_TYPE_MYLIGHT_SMART_BATTERY));
 
-    // List of all bridge channel ids
+    // List of all channel ids
+    public static final String CHANNEL_SMART_BATTERY_CHARGE_LEVEL = "charge-level";
 
     /** Channel/Property identifier describing the current Bridge State. */
     public static final String PROPERTY_BRIDGE_API_VERSION = "apiVersion";

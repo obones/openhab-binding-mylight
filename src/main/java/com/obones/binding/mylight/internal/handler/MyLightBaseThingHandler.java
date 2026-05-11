@@ -1,6 +1,7 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
- ** See the NOTICE file(s) distributed with this work for additional
+ * Copyright (c) 2026 Olivier Sannier
+ *
+ * See the NOTICE file(s) distributed with this work for additional
  * information.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -32,7 +33,6 @@ import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
-import org.openhab.core.library.types.PointType;
 import org.openhab.core.library.types.QuantityType;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.Channel;
@@ -59,6 +59,7 @@ import org.openhab.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.utils.Localization;
@@ -75,10 +76,9 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     protected ChannelTypeRegistry channelTypeRegistry;
     protected @Nullable MyLightRoomsApiResponse roomsData = null;
     protected final TimeZoneProvider timeZoneProvider;
+    protected static final Gson gson = new Gson();
 
     public Localization localization;
-
-    protected @Nullable PointType location;
 
     public MyLightBaseThingHandler(Thing thing, Localization localization, final TimeZoneProvider timeZoneProvider,
             ChannelTypeRegistry channelTypeRegistry) {
@@ -99,7 +99,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         // Initialize the channels early on as they don't require the bridge to be present
         // This allows seeing the effect of the various configuration switches without needing
         // to activate the bridge
-        initializeChannels();
+        // do not call initializeChannels();
 
         if (thisBridge == null) {
             logger.trace("initialize() updating ThingStatus to OFFLINE/CONFIGURATION_PENDING.");
@@ -282,10 +282,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
                 break;
 
             case ONLINE:
-                if (location == null)
-                    initialize();
-                else
-                    updateStatus(ThingStatus.ONLINE, ThingStatusDetail.NONE);
+                initialize();
                 break;
 
             default:
@@ -319,9 +316,9 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      *
      * @param connection {@link MyLightConnection} instance
      */
-    public void updateData(MyLightConnection connection) {
+    public void updateData(MyLightConnection connection, String authToken) {
         try {
-            if (requestData(connection)) {
+            if (requestData(connection, authToken)) {
                 updateChannels();
                 updateStatus(ThingStatus.ONLINE);
             }
@@ -332,7 +329,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
     }
 
-    protected abstract MyLightRoomsApiResponse requestData(MyLightConnection connection, PointType location)
+    protected abstract boolean refreshData(MyLightConnection connection, String authToken)
             throws CommunicationException, ConfigurationException;
 
     /**
@@ -343,18 +340,16 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      * @throws CommunicationException if there is a problem retrieving the data
      * @throws ConfigurationException if there is a configuration error
      */
-    protected boolean requestData(MyLightConnection connection) throws CommunicationException, ConfigurationException {
-        logger.debug("Update weather and forecast data of thing '{}'.", getThing().getUID());
+    protected boolean requestData(MyLightConnection connection, String authToken)
+            throws CommunicationException, ConfigurationException {
+        logger.debug("Update data of thing '{}'.", getThing().getUID());
 
-        var location = this.location;
-        if (location != null) {
-            roomsData = requestData(connection, location);
+        boolean result = refreshData(connection, authToken);
 
-            var now = OffsetDateTime.now(ZoneOffset.UTC).withNano(0);
-            thing.setProperty(PROPERTY_THING_LAST_UPDATED, DateTimeFormatter.ISO_DATE_TIME.format(now));
-        }
+        var now = OffsetDateTime.now(ZoneOffset.UTC).withNano(0);
+        thing.setProperty(PROPERTY_THING_LAST_UPDATED, DateTimeFormatter.ISO_DATE_TIME.format(now));
 
-        return true;
+        return result;
     }
 
     /**

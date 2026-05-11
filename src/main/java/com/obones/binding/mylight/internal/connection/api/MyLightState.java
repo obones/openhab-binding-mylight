@@ -10,13 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.obones.binding.mylight.internal.config;
+package com.obones.binding.mylight.internal.connection.api;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+public class MyLightState {
+    public String deviceId;
 
-@NonNullByDefault
-public class MyLightBaseThingConfiguration {
-    /*
-     * Default values - should not be modified
-     */
+    public MyLightSensorStates sensorStates;
 }

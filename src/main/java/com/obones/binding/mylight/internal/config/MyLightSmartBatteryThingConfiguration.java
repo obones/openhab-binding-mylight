@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
+ * Copyright (c) 2026 Olivier Sannier
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information.

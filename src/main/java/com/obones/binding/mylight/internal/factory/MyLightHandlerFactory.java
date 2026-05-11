@@ -1,6 +1,7 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
- ** See the NOTICE file(s) distributed with this work for additional
+ * Copyright (c) 2026 Olivier Sannier
+ *
+ * See the NOTICE file(s) distributed with this work for additional
  * information.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -18,11 +19,13 @@ import java.util.Hashtable;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jetty.client.HttpClient;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.i18n.LocaleProvider;
 import org.openhab.core.i18n.LocationProvider;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.i18n.TranslationProvider;
+import org.openhab.core.io.net.http.HttpClientFactory;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingTypeUID;
@@ -61,6 +64,7 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     private TimeZoneProvider timeZoneProvider;
     private final LocationProvider locationProvider;
     private Localization localization = Localization.UNKNOWN;
+    private final HttpClient httpClient;
 
     // Private
 
@@ -92,9 +96,9 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
         serviceAndRegistrations.remove(bridgeHandler);
     }
 
-    private @Nullable ThingHandler createBridgeHandler(Thing thing) {
+    private @Nullable ThingHandler createBridgeHandler(Thing thing, HttpClient httpClient) {
         logger.trace("createBridgeHandler({}) called for thing named '{}'.", thing.getUID(), thing.getLabel());
-        MyLightBridgeHandler myLightBridgeHandler = new MyLightBridgeHandler((Bridge) thing, localization);
+        MyLightBridgeHandler myLightBridgeHandler = new MyLightBridgeHandler((Bridge) thing, localization, httpClient);
         registerDeviceDiscoveryService(myLightBridgeHandler);
         return myLightBridgeHandler;
     }
@@ -112,13 +116,15 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
             final @Reference TranslationProvider givenI18nProvider,
             final @Reference TimeZoneProvider givenTimeZoneProvider,
             final @Reference ChannelTypeRegistry givenChannelTypeRegistry,
-            final @Reference LocationProvider givenLocationProvider) {
+            final @Reference LocationProvider givenLocationProvider,
+            final @Reference HttpClientFactory httpClientFactory) {
         logger.trace("MyLightHandlerFactory(locale={},translation={}) called.", givenLocaleProvider, givenI18nProvider);
         localeProvider = givenLocaleProvider;
         i18nProvider = givenI18nProvider;
         timeZoneProvider = givenTimeZoneProvider;
         channelTypeRegistry = givenChannelTypeRegistry;
         locationProvider = givenLocationProvider;
+        this.httpClient = httpClientFactory.getCommonHttpClient();
     }
 
     @Reference
@@ -153,7 +159,7 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
         // Handle Binding creation
         // Handle Bridge creation
         if (SUPPORTED_THINGS_BRIDGE.contains(thingTypeUID)) {
-            resultHandler = createBridgeHandler(thing);
+            resultHandler = createBridgeHandler(thing, httpClient);
         }
         // Handle creation of Things behind the Bridge
         else if (THING_TYPE_MYLIGHT_SMART_BATTERY.equals(thingTypeUID)) {

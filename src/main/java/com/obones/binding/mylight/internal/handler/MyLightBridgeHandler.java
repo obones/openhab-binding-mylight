@@ -1,6 +1,7 @@
 /**
- * Copyright (c) 2023-2024 Olivier Sannier
- ** See the NOTICE file(s) distributed with this work for additional
+ * Copyright (c) 2026 Olivier Sannier
+ *
+ * See the NOTICE file(s) distributed with this work for additional
  * information.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
@@ -21,11 +22,13 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jetty.client.HttpClient;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.openhab.core.thing.ThingStatus;
+import org.openhab.core.thing.ThingStatusDetail;
 import org.openhab.core.thing.binding.BaseBridgeHandler;
 import org.openhab.core.thing.binding.ThingHandler;
 import org.openhab.core.thing.util.ThingHandlerHelper;
@@ -34,6 +37,7 @@ import org.openhab.core.types.RefreshType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBridgeConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightHttpConnection;
@@ -65,21 +69,25 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     private @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
 
     public Localization localization;
+    public String authToken = "";
 
     private @Nullable ScheduledFuture<?> refreshJob;
     private @Nullable MyLightConnection connection;
+    private HttpClient httpClient;
 
     private static final long INITIAL_DELAY_IN_SECONDS = 15;
+    private static final Gson gson = new Gson();
 
     /*
      * ************************
      * ***** Constructors *****
      */
 
-    public MyLightBridgeHandler(final Bridge bridge, Localization localization) {
+    public MyLightBridgeHandler(final Bridge bridge, Localization localization, HttpClient httpClient) {
         super(bridge);
         logger.trace("MyLightBridgeHandler(constructor with bridge={}, localization={}) called.", bridge, localization);
         this.localization = localization;
+        this.httpClient = httpClient;
         logger.debug("Creating a MyLightBridgeHandler for thing '{}'.", getThing().getUID());
     }
 
@@ -104,7 +112,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
             return;
         }
 
-        connection = new MyLightHttpConnection(config.baseURI);
+        connection = new MyLightHttpConnection(httpClient, config.baseURI);
 
         ScheduledFuture<?> localRefreshJob = refreshJob;
         if (localRefreshJob == null || localRefreshJob.isCancelled()) {
@@ -170,27 +178,53 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         }, INITIAL_DELAY_IN_SECONDS, TimeUnit.SECONDS);
     }
 
-    private void updateThings() {
-        ThingStatus status = ThingStatus.ONLINE;
+    private class LoginReply {
+        // {"status":"ok","authToken":"1WNOSOtwp1tgYav9-xo22GZTCzyElhHLQ"}
+        public String status = "";
+        public String authToken = "";
+    }
 
-        updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
+    private boolean ensureValidAuthToken() {
+        MyLightBridgeConfiguration config = getConfigAs(MyLightBridgeConfiguration.class);
 
-        List<Thing> children = getThing().getThings().stream().filter(Thing::isEnabled).collect(Collectors.toList());
-        if (!children.isEmpty()) {
-            for (Thing thing : children) {
-                updateThing((MyLightBaseThingHandler) thing.getHandler(), thing);
+        var loginResult = connection.login(config.email, config.password);
+        if (loginResult.successful) {
+            updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
+            LoginReply reply = gson.fromJson(loginResult.serverReply, LoginReply.class);
+
+            if (reply.status.equals("ok")) {
+                authToken = reply.authToken;
+                return true;
             }
         }
-        updateStatus(status);
+
+        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, loginResult.serverReply);
+        return false;
+    }
+
+    private void updateThings() {
+        if (ensureValidAuthToken()) {
+            updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
+            updateStatus(ThingStatus.ONLINE);
+
+            List<Thing> children = getThing().getThings().stream().filter(Thing::isEnabled)
+                    .collect(Collectors.toList());
+            if (!children.isEmpty()) {
+                for (Thing thing : children) {
+                    updateThing((MyLightBaseThingHandler) thing.getHandler(), thing);
+                }
+            }
+        }
     }
 
     private ThingStatus updateThing(@Nullable MyLightBaseThingHandler handler, Thing thing) {
         var connection = this.connection; // store in a local variable to avoid null checking error
-        if (handler != null && ThingHandlerHelper.isHandlerInitialized(handler) && connection != null) {
-            handler.updateData(connection);
+        if (this.getThing().getStatus().equals(ThingStatus.ONLINE) && handler != null
+                && ThingHandlerHelper.isHandlerInitialized(handler) && connection != null) {
+            handler.updateData(connection, authToken);
             return thing.getStatus();
         } else {
-            logger.debug("Cannot update weather data of thing '{}' as location handler is null.", thing.getUID());
+            logger.debug("Cannot update data of thing '{}' as location handler is null.", thing.getUID());
             return ThingStatus.OFFLINE;
         }
     }
