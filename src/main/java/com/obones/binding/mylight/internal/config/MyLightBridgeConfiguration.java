@@ -21,7 +21,7 @@ public class MyLightBridgeConfiguration {
      * Default values - should not be modified
      */
     public String baseURI = "https://myhome.mylight-systems.com/api/";
-    public int refreshInterval = 60;
+    public int refreshInterval = 5;
     public String email = "";
     public String password = "";
 }

@@ -27,7 +27,7 @@
 		<parameter name="refreshInterval" type="integer" min="1" unit="min">
 			<label>@text/config.mylight.bridge.refreshInterval.label</label>
 			<description>@text/config.mylight.bridge.refreshInterval.description</description>
-			<default>60</default>
+			<default>5</default>
 		</parameter>
 	</config-description>
 	<!-- -->
