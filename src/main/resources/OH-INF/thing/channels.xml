@@ -8,6 +8,15 @@
 	<!-- Channel Type - of Binding -->
 
 	<!-- Channel Type - of Bridge -->
+	<channel-type id="time-stamp">
+		<item-type>DateTime</item-type>
+		<label>@text/channel.mylight.mylight.last-updated.label</label>
+		<description>@text/channel.mylight.mylight.last-updated.description</description>
+		<category>Timestamp</category>
+		<tags>
+			<tag>Timestamp</tag>
+		</tags>
+	</channel-type>
 
 	<!-- Channel Type - of SmartBattery -->
 	<channel-type id="charge-level">

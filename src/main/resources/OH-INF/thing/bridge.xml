@@ -11,10 +11,7 @@
 		<description>@text/bridge-type.mylight.mylight.description</description>
 
 		<channels>
-			<channel id="last-updated" typeId="time-stamp">
-				<label>@text/channel.mylight.mylight.last-updated.label</label>
-				<description>@text/channel.mylight.mylight.last-updated.description</description>
-			</channel>
+			<channel id="last-updated" typeId="time-stamp"/>
 		</channels>
 
 		<properties>
