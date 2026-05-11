@@ -245,8 +245,8 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      */
     protected abstract void updateChannel(ChannelUID channelUID);
 
-    protected State getDecimalTypeState(@Nullable Float value) {
-        return ((value == null || !Float.isFinite(value))) ? UnDefType.UNDEF : new DecimalType(value);
+    protected State getDecimalTypeState(@Nullable Number value) {
+        return ((value == null || !Double.isFinite(value.doubleValue()))) ? UnDefType.UNDEF : new DecimalType(value);
     }
 
     protected State getQuantityTypeState(@Nullable Number value, Unit<?> unit) {

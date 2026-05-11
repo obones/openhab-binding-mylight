@@ -58,6 +58,7 @@ public class MyLightBindingConstants {
 
     // List of all channel ids
     public static final String CHANNEL_SMART_BATTERY_CHARGE_LEVEL = "charge-level";
+    public static final String CHANNEL_SMART_BATTERY_CHARGE_ENERGY = "charge-energy";
 
     /** Channel/Property identifier describing the current Bridge State. */
     public static final String PROPERTY_BRIDGE_API_VERSION = "apiVersion";

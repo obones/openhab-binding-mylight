@@ -19,7 +19,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.i18n.CommunicationException;
 import org.openhab.core.i18n.ConfigurationException;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.types.DecimalType;
+import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.obones.binding.mylight.internal.config.MyLightSmartBatteryThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
+import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /***
@@ -95,6 +96,19 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         return false;
     }
 
+    private @Nullable MyLightSensorState getStateOfChargeSensorState() {
+        for (var state : states) {
+            if (state.deviceId.equals(batteryId)) {
+                for (var sensorState : state.sensorStates) {
+                    if (sensorState.sensorId.endsWith("-soc"))
+                        return sensorState;
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Updates the channel with the given UID from the latest MyLight data retrieved.
      *
@@ -103,23 +117,29 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     protected void updateChannel(ChannelUID channelUID) {
         logger.debug("MyLightSmartBatteryThingHandler: updateChannel {}", channelUID);
 
+        var stateOfChargeSensorState = getStateOfChargeSensorState();
+
         switch (channelUID.getId()) {
             case CHANNEL_SMART_BATTERY_CHARGE_LEVEL:
-                for (var state : states) {
-                    if (state.deviceId.equals(batteryId)) {
-                        for (var sensorState : state.sensorStates) {
-                            if (sensorState.sensorId.endsWith("-soc")) {
-                                double stateOfCharge = sensorState.measure.value;
-                                double maxStateOfCharge = 36e5 * batteryCapacity;
-                                double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge);
-                                double chargeLevel = (boundedStateOfCharge == 0) ? 0
-                                        : Math.min(100, boundedStateOfCharge / 36e5 * 100 / batteryCapacity);
+                if (stateOfChargeSensorState != null) {
+                    double stateOfCharge = stateOfChargeSensorState.measure.value;
+                    double maxStateOfCharge = 36e5 * batteryCapacity;
+                    double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge);
+                    double chargeLevel = (boundedStateOfCharge == 0) ? 0
+                            : Math.min(100, boundedStateOfCharge / 36e5 * 100 / batteryCapacity);
 
-                                updateState(channelUID, new DecimalType(chargeLevel));
-                                return;
-                            }
-                        }
-                    }
+                    updateState(channelUID, getDecimalTypeState(chargeLevel));
+                    return;
+                }
+                break;
+            case CHANNEL_SMART_BATTERY_CHARGE_ENERGY:
+                if (stateOfChargeSensorState != null) {
+                    double stateOfCharge = stateOfChargeSensorState.measure.value;
+                    double maxStateOfCharge = 36e5 * batteryCapacity;
+                    double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge) / 36e5;
+
+                    updateState(channelUID, getQuantityTypeState(boundedStateOfCharge, Units.KILOWATT_HOUR));
+                    return;
                 }
                 break;
         }
