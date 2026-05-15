@@ -20,6 +20,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
@@ -76,7 +77,10 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     private HttpClient httpClient;
 
     private static final long INITIAL_DELAY_IN_SECONDS = 15;
+    private static final long AUTH_TOKEN_REFRESH_DELAY_HOURS = 2;
     private static final Gson gson = new Gson();
+
+    private ZonedDateTime lastAuthTokenDateTime;
 
     /*
      * ************************
@@ -89,6 +93,8 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         this.localization = localization;
         this.httpClient = httpClient;
         logger.debug("Creating a MyLightBridgeHandler for thing '{}'.", getThing().getUID());
+
+        lastAuthTokenDateTime = ZonedDateTime.now().minusDays(5); // a long way in the past to force initial update
     }
 
     // Provisioning/Deprovisioning methods *****
@@ -185,21 +191,25 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     }
 
     private boolean ensureValidAuthToken() {
-        MyLightBridgeConfiguration config = getConfigAs(MyLightBridgeConfiguration.class);
+        if (lastAuthTokenDateTime.isBefore(ZonedDateTime.now().minusHours(AUTH_TOKEN_REFRESH_DELAY_HOURS))) {
+            MyLightBridgeConfiguration config = getConfigAs(MyLightBridgeConfiguration.class);
 
-        var loginResult = connection.login(config.email, config.password);
-        if (loginResult.successful) {
-            updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
-            LoginReply reply = gson.fromJson(loginResult.serverReply, LoginReply.class);
+            var loginResult = connection.login(config.email, config.password);
+            if (loginResult.successful) {
+                updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
+                LoginReply reply = gson.fromJson(loginResult.serverReply, LoginReply.class);
 
-            if (reply.status.equals("ok")) {
-                authToken = reply.authToken;
-                return true;
+                if (reply.status.equals("ok")) {
+                    authToken = reply.authToken;
+                    return true;
+                }
             }
+
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, loginResult.serverReply);
+            return false;
         }
 
-        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, loginResult.serverReply);
-        return false;
+        return true;
     }
 
     private void updateThings() {
@@ -230,9 +240,9 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     }
 
     private boolean validateConfig(MyLightBridgeConfiguration config) {
-        return (config.baseURI != null && !config.baseURI.trim().isEmpty()) && //
+        return (!config.baseURI.trim().isEmpty()) && //
                 (config.refreshInterval > 0) && //
-                (config.email != null && !config.email.trim().isEmpty()) && //
-                (config.password != null && !config.password.trim().isEmpty());
+                (!config.email.trim().isEmpty()) && //
+                (!config.password.trim().isEmpty());
     }
 }
