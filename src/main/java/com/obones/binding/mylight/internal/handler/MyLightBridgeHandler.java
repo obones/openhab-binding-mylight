@@ -20,7 +20,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
@@ -42,6 +41,7 @@ import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBridgeConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightHttpConnection;
+import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /**
@@ -74,6 +74,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
 
     private @Nullable ScheduledFuture<?> refreshJob;
     private @Nullable MyLightConnection connection;
+    private @Nullable MyLightStatesApiResponse states;
     private HttpClient httpClient;
 
     private static final long INITIAL_DELAY_IN_SECONDS = 15;
@@ -217,6 +218,8 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
             updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
             updateStatus(ThingStatus.ONLINE);
 
+            states = connection.getStates(authToken);
+
             List<Thing> children = getThing().getThings().stream().filter(Thing::isEnabled)
                     .collect(Collectors.toList());
             if (!children.isEmpty()) {
@@ -228,15 +231,18 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     }
 
     private ThingStatus updateThing(@Nullable MyLightBaseThingHandler handler, Thing thing) {
-        var connection = this.connection; // store in a local variable to avoid null checking error
         if (this.getThing().getStatus().equals(ThingStatus.ONLINE) && handler != null
-                && ThingHandlerHelper.isHandlerInitialized(handler) && connection != null) {
-            handler.updateData(connection, authToken);
-            return thing.getStatus();
-        } else {
-            logger.debug("Cannot update data of thing '{}' as location handler is null.", thing.getUID());
-            return ThingStatus.OFFLINE;
+                && ThingHandlerHelper.isHandlerInitialized(handler)) {
+
+            var states = this.states;
+            if (states != null) {
+                handler.updateData(states);
+                return thing.getStatus();
+            }
         }
+
+        logger.debug("Cannot update thing '{}'.", thing.getUID());
+        return ThingStatus.OFFLINE;
     }
 
     private boolean validateConfig(MyLightBridgeConfiguration config) {

@@ -16,8 +16,6 @@ import static com.obones.binding.mylight.internal.MyLightBindingConstants.*;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.core.i18n.CommunicationException;
-import org.openhab.core.i18n.ConfigurationException;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.ChannelUID;
@@ -26,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.obones.binding.mylight.internal.config.MyLightSmartBatteryThingConfiguration;
-import com.obones.binding.mylight.internal.connection.MyLightConnection;
-import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
 import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -42,8 +38,6 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     private @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
 
     private double batteryCapacity = 0;
-    @Nullable
-    private MyLightStatesApiResponse states = null;
 
     public MyLightSmartBatteryThingHandler(Thing thing, Localization localization,
             final TimeZoneProvider timeZoneProvider) {
@@ -63,20 +57,11 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         return result;
     }
 
-    protected boolean refreshData(MyLightConnection connection, String authToken)
-            throws CommunicationException, ConfigurationException {
-        states = connection.getStates(authToken);
-        return true;
-    }
-
     private @Nullable MyLightSensorState getSensorStateBySuffix(String suffix) {
-        MyLightSmartBatteryThingConfiguration config = getConfigAs(MyLightSmartBatteryThingConfiguration.class);
-        for (var state : states) {
-            if (state.deviceId.equals(config.deviceId)) {
-                for (var sensorState : state.sensorStates) {
-                    if (sensorState.sensorId.endsWith(suffix))
-                        return sensorState;
-                }
+        if (deviceState != null) {
+            for (var sensorState : deviceState.sensorStates) {
+                if (sensorState.sensorId.endsWith(suffix))
+                    return sensorState;
             }
         }
 

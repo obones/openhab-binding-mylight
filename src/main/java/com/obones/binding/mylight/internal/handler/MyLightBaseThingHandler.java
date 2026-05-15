@@ -54,7 +54,8 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
-import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
+import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
+import com.obones.binding.mylight.internal.connection.api.MyLightState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /***
@@ -66,9 +67,9 @@ import com.obones.binding.mylight.internal.utils.Localization;
 public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
     protected @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
-    protected @Nullable MyLightRoomsApiResponse roomsData = null;
     protected final TimeZoneProvider timeZoneProvider;
     protected static final Gson gson = new Gson();
+    protected @Nullable MyLightState deviceState;
 
     public Localization localization;
 
@@ -190,12 +191,10 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
     /**
      * Updates MyLight data for this location.
-     *
-     * @param connection {@link MyLightConnection} instance
      */
-    public void updateData(MyLightConnection connection, String authToken) {
+    public void updateData(MyLightStatesApiResponse states) {
         try {
-            if (requestData(connection, authToken)) {
+            if (requestData(states)) {
                 updateChannels();
                 updateStatus(ThingStatus.ONLINE);
             }
@@ -206,9 +205,6 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
     }
 
-    protected abstract boolean refreshData(MyLightConnection connection, String authToken)
-            throws CommunicationException, ConfigurationException;
-
     /**
      * Requests the data from MyLight API.
      *
@@ -217,11 +213,20 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      * @throws CommunicationException if there is a problem retrieving the data
      * @throws ConfigurationException if there is a configuration error
      */
-    protected boolean requestData(MyLightConnection connection, String authToken)
+    protected boolean requestData(MyLightStatesApiResponse states)
             throws CommunicationException, ConfigurationException {
         logger.debug("Update data of thing '{}'.", getThing().getUID());
 
-        boolean result = refreshData(connection, authToken);
+        MyLightBaseThingConfiguration config = getConfigAs(MyLightBaseThingConfiguration.class);
+
+        boolean result = false;
+        for (var state : states) {
+            if (state.deviceId.equals(config.deviceId)) {
+                deviceState = state;
+                result = true;
+                break;
+            }
+        }
 
         var now = OffsetDateTime.now(ZoneOffset.UTC).withNano(0);
         thing.setProperty(PROPERTY_THING_LAST_UPDATED, DateTimeFormatter.ISO_DATE_TIME.format(now));
