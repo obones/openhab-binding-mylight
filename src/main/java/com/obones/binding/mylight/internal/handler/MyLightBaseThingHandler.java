@@ -54,7 +54,9 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
+import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
+import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
 import com.obones.binding.mylight.internal.connection.api.MyLightState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -202,6 +204,22 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getRawMessage());
         } catch (ConfigurationException e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getRawMessage());
+        }
+    }
+
+    protected abstract void updateDeviceProperties(MyLightRoomDevice device);
+
+    public void updateDeviceProperties(MyLightRoomsApiResponse rooms) {
+        logger.debug("Update device properties of thing '{}'.", getThing().getUID());
+
+        MyLightBaseThingConfiguration config = getConfigAs(MyLightBaseThingConfiguration.class);
+
+        for (var room : rooms) {
+            for (var device : room.devices) {
+                if (device.device_id.equals(config.deviceId)) {
+                    updateDeviceProperties(device);
+                }
+            }
         }
     }
 

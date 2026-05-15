@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.obones.binding.mylight.internal.config.MyLightSmartBatteryThingConfiguration;
+import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
 import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -66,6 +67,11 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         }
 
         return null;
+    }
+
+    @Override
+    protected void updateDeviceProperties(MyLightRoomDevice device) {
+        batteryCapacity = device.batteryCapacity;
     }
 
     /**

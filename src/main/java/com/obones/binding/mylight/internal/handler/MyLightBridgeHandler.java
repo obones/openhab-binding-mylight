@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBridgeConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightHttpConnection;
+import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -75,6 +76,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     private @Nullable ScheduledFuture<?> refreshJob;
     private @Nullable MyLightConnection connection;
     private @Nullable MyLightStatesApiResponse states;
+    private @Nullable MyLightRoomsApiResponse rooms;
     private HttpClient httpClient;
 
     private static final long INITIAL_DELAY_IN_SECONDS = 15;
@@ -219,6 +221,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
             updateStatus(ThingStatus.ONLINE);
 
             states = connection.getStates(authToken);
+            rooms = connection.getRooms(authToken);
 
             List<Thing> children = getThing().getThings().stream().filter(Thing::isEnabled)
                     .collect(Collectors.toList());
@@ -235,7 +238,9 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
                 && ThingHandlerHelper.isHandlerInitialized(handler)) {
 
             var states = this.states;
-            if (states != null) {
+            var rooms = this.rooms;
+            if (states != null && rooms != null) {
+                handler.updateDeviceProperties(rooms);
                 handler.updateData(states);
                 return thing.getStatus();
             }
