@@ -16,10 +16,20 @@
 		<description>@text/thing-type.mylight.smart-battery.description</description>
 		<category>Electricity</category>
 		<channels>
-			<channel id="charge-level" typeId="charge-level">
-				<label>@text/channel-type.mylight.smart-battery.charge-level.label</label>
-			</channel>
+			<channel id="charge-level" typeId="charge-level"/>
 			<channel id="charge-energy" typeId="charge-energy"/>
+			<channel id="instantaneous-charge-energy" typeId="charge-energy">
+				<label>@text/channel.mylight.smart-battery.instantaneous-charge-energy.label</label>
+				<description>@text/channel.mylight.smart-battery.instantaneous-charge-energy.description</description>
+			</channel>
+			<channel id="instantaneous-discharge-energy" typeId="charge-energy">
+				<label>@text/channel.mylight.smart-battery.instantaneous-discharge-energy.label</label>
+				<description>@text/channel.mylight.smart-battery.instantaneous-discharge-energy.description</description>
+			</channel>
+			<channel id="instantaneous-loss-energy" typeId="charge-energy">
+				<label>@text/channel.mylight.smart-battery.instantaneous-loss-energy.label</label>
+				<description>@text/channel.mylight.smart-battery.instantaneous-loss-energy.description</description>
+			</channel>
 		</channels>
 		<properties>
 			<property name="vendor">MyLight</property>

@@ -59,15 +59,18 @@ public class MyLightBindingConstants {
     // List of all channel ids
     public static final String CHANNEL_SMART_BATTERY_CHARGE_LEVEL = "charge-level";
     public static final String CHANNEL_SMART_BATTERY_CHARGE_ENERGY = "charge-energy";
+    public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_CHARGE_ENERGY = "instantaneous-charge-energy";
+    public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_DISCHARGE_ENERGY = "instantaneous-discharge-energy";
+    public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_LOSS_ENERGY = "instantaneous-loss-energy";
 
     /** Channel/Property identifier describing the current Bridge State. */
     public static final String PROPERTY_BRIDGE_API_VERSION = "apiVersion";
 
     // Thing properties
     public static final String PROPERTY_THING_LAST_UPDATED = "last-updated";
+    public static final String PROPERTY_THING_DEVICE_ID = "device-id";
 
     // SmartBattery thing properties
-    public static final String PROPERTY_SMART_BATTERY_ID = "id";
     public static final String PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY = "subscribed-capacity";
 
     // List of all bridge channel/ids
