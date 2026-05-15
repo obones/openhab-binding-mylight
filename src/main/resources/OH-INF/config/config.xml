@@ -34,6 +34,10 @@
 	<!-- MyLight SmartBattery -->
 	<!-- -->
 	<config-description uri="thing-type:mylight:smart-battery">
+		<parameter name="device-id" type="text" required="true">
+			<label>@text/config.mylight.smart-battery.device-id.label</label>
+			<description>@text/config.mylight.smart-battery.device-id.description</description>
+		</parameter>
 	</config-description>
 
 </config-description:config-descriptions>

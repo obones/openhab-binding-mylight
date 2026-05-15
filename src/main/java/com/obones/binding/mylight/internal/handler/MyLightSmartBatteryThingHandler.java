@@ -41,8 +41,6 @@ import com.obones.binding.mylight.internal.utils.Localization;
 public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     private @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
 
-    @Nullable
-    private String batteryId = null;
     private double batteryCapacity = 0;
     @Nullable
     private MyLightStatesApiResponse states = null;
@@ -65,42 +63,18 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         return result;
     }
 
-    private void ensureValidBatteryId(MyLightConnection connection, String authToken) {
-        if (batteryId == null) {
-            var rooms = connection.getRooms(authToken);
-            for (var room : rooms) {
-                for (var device : room.devices) {
-                    if (device.type_id.equals("my_smart_battery")) {
-                        batteryId = device.device_id;
-                        batteryCapacity = device.batteryCapacity;
-
-                        thing.setProperty(PROPERTY_SMART_BATTERY_ID, batteryId);
-                        thing.setProperty(PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY, Double.toString(batteryCapacity));
-
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     protected boolean refreshData(MyLightConnection connection, String authToken)
             throws CommunicationException, ConfigurationException {
-        ensureValidBatteryId(connection, authToken);
-
-        if (batteryId != null) {
-            states = connection.getStates(authToken);
-            return true;
-        }
-
-        return false;
+        states = connection.getStates(authToken);
+        return true;
     }
 
-    private @Nullable MyLightSensorState getStateOfChargeSensorState() {
+    private @Nullable MyLightSensorState getSensorStateBySuffix(String suffix) {
+        MyLightSmartBatteryThingConfiguration config = getConfigAs(MyLightSmartBatteryThingConfiguration.class);
         for (var state : states) {
-            if (state.deviceId.equals(batteryId)) {
+            if (state.deviceId.equals(config.deviceId)) {
                 for (var sensorState : state.sensorStates) {
-                    if (sensorState.sensorId.endsWith("-soc"))
+                    if (sensorState.sensorId.endsWith(suffix))
                         return sensorState;
                 }
             }
@@ -117,7 +91,7 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     protected void updateChannel(ChannelUID channelUID) {
         logger.debug("MyLightSmartBatteryThingHandler: updateChannel {}", channelUID);
 
-        var stateOfChargeSensorState = getStateOfChargeSensorState();
+        var stateOfChargeSensorState = getSensorStateBySuffix("-soc");
 
         switch (channelUID.getId()) {
             case CHANNEL_SMART_BATTERY_CHARGE_LEVEL:
@@ -136,12 +110,35 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
                 if (stateOfChargeSensorState != null) {
                     double stateOfCharge = stateOfChargeSensorState.measure.value;
                     double maxStateOfCharge = 36e5 * batteryCapacity;
-                    double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge) / 36e5;
+                    double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge);
 
-                    updateState(channelUID, getQuantityTypeState(boundedStateOfCharge, Units.KILOWATT_HOUR));
+                    updateState(channelUID, getQuantityTypeState(boundedStateOfCharge, Units.WATT_SECOND));
                     return;
                 }
                 break;
+            case CHANNEL_SMART_BATTERY_INSTANTANEOUS_CHARGE_ENERGY:
+                var instantaneousChargeEnergySensorState = getSensorStateBySuffix("charge_energy");
+                if (instantaneousChargeEnergySensorState != null) {
+                    updateState(channelUID, getQuantityTypeState(instantaneousChargeEnergySensorState.measure.value,
+                            Units.WATT_SECOND));
+                }
+                break;
+            case CHANNEL_SMART_BATTERY_INSTANTANEOUS_DISCHARGE_ENERGY:
+                var instantaneousDischargeEnergySensorState = getSensorStateBySuffix("discharge_energy");
+                if (instantaneousDischargeEnergySensorState != null) {
+                    updateState(channelUID, getQuantityTypeState(instantaneousDischargeEnergySensorState.measure.value,
+                            Units.WATT_SECOND));
+                }
+                break;
+            case CHANNEL_SMART_BATTERY_INSTANTANEOUS_LOSS_ENERGY:
+                var instantaneousLossEnergySensorState = getSensorStateBySuffix("loss_energy");
+                if (instantaneousLossEnergySensorState != null) {
+                    updateState(channelUID,
+                            getQuantityTypeState(instantaneousLossEnergySensorState.measure.value, Units.WATT_SECOND));
+                }
+                break;
+            default:
+                logger.error("Unknown channel {}", channelUID.toString());
         }
     }
 }

@@ -52,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.utils.Localization;
@@ -111,7 +112,9 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     protected synchronized boolean validateConfig() {
-        return true;
+        MyLightBaseThingConfiguration config = getConfigAs(MyLightBaseThingConfiguration.class);
+
+        return config.deviceId != "";
     }
 
     @Override

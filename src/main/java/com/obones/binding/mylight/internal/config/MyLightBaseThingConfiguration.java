@@ -19,4 +19,5 @@ public class MyLightBaseThingConfiguration {
     /*
      * Default values - should not be modified
      */
+    public String deviceId = "";
 }
