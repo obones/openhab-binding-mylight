@@ -70,6 +70,11 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     }
 
     @Override
+    protected String getExpectedTypeId() {
+        return "my_smart_battery";
+    }
+
+    @Override
     protected void updateDeviceProperties(MyLightRoomDevice device) {
         batteryCapacity = device.batteryCapacity;
     }

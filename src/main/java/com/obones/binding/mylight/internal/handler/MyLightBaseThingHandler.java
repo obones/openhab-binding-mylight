@@ -207,6 +207,19 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
     }
 
+    protected abstract String getExpectedTypeId();
+
+    protected boolean isValidDevice(MyLightRoomDevice device) {
+        var expectedTypeId = getExpectedTypeId();
+        if (device.type_id.equals(expectedTypeId)) {
+            return true;
+        } else {
+            logger.error("Wrong type id for {}: expected {}, got {}", getThing().getUID(), expectedTypeId,
+                    device.type_id);
+            return false;
+        }
+    }
+
     protected abstract void updateDeviceProperties(MyLightRoomDevice device);
 
     public void updateDeviceProperties(MyLightRoomsApiResponse rooms) {
@@ -217,7 +230,12 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         for (var room : rooms) {
             for (var device : room.devices) {
                 if (device.device_id.equals(config.deviceId)) {
-                    updateDeviceProperties(device);
+                    if (isValidDevice(device)) {
+                        updateDeviceProperties(device);
+                    } else {
+                        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR);
+                    }
+                    break;
                 }
             }
         }
