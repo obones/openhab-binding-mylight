@@ -27,8 +27,6 @@ import javax.measure.Unit;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.config.core.Configuration;
-import org.openhab.core.i18n.CommunicationException;
-import org.openhab.core.i18n.ConfigurationException;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
@@ -53,7 +51,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
-import com.obones.binding.mylight.internal.connection.MyLightConnection;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
 import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
@@ -195,28 +192,19 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      * Updates MyLight data for this location.
      */
     public void updateData(MyLightStatesApiResponse states) {
-        try {
-            if (requestData(states)) {
-                updateChannels();
-                updateStatus(ThingStatus.ONLINE);
-            }
-        } catch (CommunicationException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getRawMessage());
-        } catch (ConfigurationException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getRawMessage());
+        if (storeDeviceState(states)) {
+            updateChannels();
+            updateStatus(ThingStatus.ONLINE);
         }
     }
 
     protected abstract String getExpectedTypeId();
 
-    protected boolean isValidDevice(MyLightRoomDevice device) {
+    protected void ensureValidDevice(MyLightRoomDevice device) throws IllegalArgumentException {
         var expectedTypeId = getExpectedTypeId();
-        if (device.type_id.equals(expectedTypeId)) {
-            return true;
-        } else {
-            logger.error("Wrong type id for {}: expected {}, got {}", getThing().getUID(), expectedTypeId,
-                    device.type_id);
-            return false;
+        if (!device.type_id.equals(expectedTypeId)) {
+            throw new IllegalArgumentException(String.format("Wrong type id for {}: expected {}, got {}",
+                    getThing().getUID(), expectedTypeId, device.type_id));
         }
     }
 
@@ -230,10 +218,12 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         for (var room : rooms) {
             for (var device : room.devices) {
                 if (device.device_id.equals(config.deviceId)) {
-                    if (isValidDevice(device)) {
+                    try {
+                        ensureValidDevice(device);
                         updateDeviceProperties(device);
-                    } else {
-                        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR);
+                    } catch (IllegalArgumentException e) {
+                        logger.error(e.getMessage());
+                        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
                     }
                     break;
                 }
@@ -244,13 +234,10 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     /**
      * Requests the data from MyLight API.
      *
-     * @param connection {@link MyLightConnection} instance
-     * @return true, if the request for the MyLight data was successful
-     * @throws CommunicationException if there is a problem retrieving the data
-     * @throws ConfigurationException if there is a configuration error
+     * @param states {@link MyLightStatesApiResponse} instance
+     * @return true, if the device state was found from given states
      */
-    protected boolean requestData(MyLightStatesApiResponse states)
-            throws CommunicationException, ConfigurationException {
+    protected boolean storeDeviceState(MyLightStatesApiResponse states) {
         logger.debug("Update data of thing '{}'.", getThing().getUID());
 
         MyLightBaseThingConfiguration config = getConfigAs(MyLightBaseThingConfiguration.class);
