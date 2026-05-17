@@ -54,6 +54,7 @@ import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
 import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
+import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.connection.api.MyLightState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -208,7 +209,8 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
     }
 
-    protected abstract void updateDeviceProperties(MyLightRoomDevice device);
+    protected void updateDeviceProperties(MyLightRoomDevice device) {
+    }
 
     public void updateDeviceProperties(MyLightRoomsApiResponse rooms) {
         logger.debug("Update device properties of thing '{}'.", getThing().getUID());
@@ -232,7 +234,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     /**
-     * Requests the data from MyLight API.
+     * Stores the data from MyLight API.
      *
      * @param states {@link MyLightStatesApiResponse} instance
      * @return true, if the device state was found from given states
@@ -275,6 +277,18 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
      * @param channelUID UID of the channel
      */
     protected abstract void updateChannel(ChannelUID channelUID);
+
+    protected @Nullable MyLightSensorState getSensorStateBySuffix(String suffix) {
+        var deviceState = this.deviceState;
+        if (deviceState != null) {
+            for (var sensorState : deviceState.sensorStates) {
+                if (sensorState.sensorId.endsWith(suffix))
+                    return sensorState;
+            }
+        }
+
+        return null;
+    }
 
     protected State getDecimalTypeState(@Nullable Number value) {
         return ((value == null || !Double.isFinite(value.doubleValue()))) ? UnDefType.UNDEF : new DecimalType(value);
