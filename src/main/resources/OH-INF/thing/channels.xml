@@ -56,4 +56,29 @@
 		<state pattern="%.4f %unit%" readOnly="true"/>
 	</channel-type>
 
+	<!-- Channel Type - of Virtual Counters -->
+	<channel-type id="autonomy-rate">
+		<item-type>Number:Dimensionless</item-type>
+		<label>@text/channel-type.mylight.virtual-counters.autonomy-rate.label</label>
+		<description>@text/channel-type.mylight.virtual-counters.autonomy-rate.description</description>
+		<category>QualityOfService</category>
+		<tags>
+			<tag>Measurement</tag>
+			<tag>Energy</tag>
+		</tags>
+		<state pattern="%.1f %%" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="self-consumption">
+		<item-type>Number:Dimensionless</item-type>
+		<label>@text/channel-type.mylight.virtual-counters.self-consumption.label</label>
+		<description>@text/channel-type.mylight.virtual-counters.self-consumption.description</description>
+		<category>QualityOfService</category>
+		<tags>
+			<tag>Measurement</tag>
+			<tag>Energy</tag>
+		</tags>
+		<state pattern="%.1f %%" readOnly="true"/>
+	</channel-type>
+
 </thing:thing-descriptions>

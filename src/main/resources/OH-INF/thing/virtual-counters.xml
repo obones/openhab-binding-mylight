@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Binding -->
+<thing:thing-descriptions bindingId="mylight"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- -->
+	<!-- MyLight Virtual Counters thing -->
+	<!-- -->
+	<thing-type id="virtual-counters">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="mylight"/>
+		</supported-bridge-type-refs>
+		<label>@text/thing-type.mylight.virtual-counters.label</label>
+		<description>@text/thing-type.mylight.virtual-counters.description</description>
+		<category>Electricity</category>
+		<channels>
+			<channel id="produced-energy" typeId="system.electric-energy">
+				<label>@text/channel.mylight.virtual-counters.produced-energy.label</label>
+				<description>@text/channel.mylight.virtual-counters.produced-energy.description</description>
+				<state pattern="%.4f %unit%" readOnly="true"/>
+			</channel>
+			<channel id="electricity-meter-energy" typeId="system.electric-energy">
+				<label>@text/channel.mylight.virtual-counters.electricity-meter-energy.label</label>
+				<description>@text/channel.mylight.virtual-counters.electricity-meter-energy.description</description>
+				<state pattern="%.4f %unit%" readOnly="true"/>
+			</channel>
+			<channel id="total-energy" typeId="system.electric-energy">
+				<label>@text/channel.mylight.virtual-counters.total-energy.label</label>
+				<description>@text/channel.mylight.virtual-counters.total-energy.description</description>
+				<state pattern="%.4f %unit%" readOnly="true"/>
+			</channel>
+			<channel id="green-energy" typeId="system.electric-energy">
+				<label>@text/channel.mylight.virtual-counters.green-energy.label</label>
+				<description>@text/channel.mylight.virtual-counters.green-energy.description</description>
+				<state pattern="%.4f %unit%" readOnly="true"/>
+			</channel>
+			<channel id="grid-energy" typeId="system.electric-energy">
+				<label>@text/channel.mylight.virtual-counters.grid-energy.label</label>
+				<description>@text/channel.mylight.virtual-counters.grid-energy.description</description>
+				<state pattern="%.4f %unit%" readOnly="true"/>
+			</channel>
+			<channel id="autonomy-rate" typeId="autonomy-rate"/>
+			<channel id="self-consumption" typeId="self-consumption"/>
+		</channels>
+		<properties>
+			<property name="vendor">MyLight</property>
+			<property name="id"/>
+			<property name="last-updated"/>
+		</properties>
+		<representation-property>id</representation-property>
+		<config-description-ref uri="thing-type:mylight:virtual-counters"/>
+	</thing-type>
+</thing:thing-descriptions>

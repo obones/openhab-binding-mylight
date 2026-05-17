@@ -40,6 +40,10 @@ public class MyLightBindingConstants {
      * The Thing identification of a smart battery defined on the <B>MyLight</B> bridge.
      */
     private static final String THING_MYLIGHT_SMART_BATTERY = "smart-battery";
+    /**
+     * The Thing identification of the virtual counters defined on the <B>MyLight</B> bridge.
+     */
+    private static final String THING_MYLIGHT_VIRTUAL_COUNTERS = "virtual-counters";
 
     // Discovered things id
     public static final String SYSTEM_LOCATION_THING_ID = "system";
@@ -50,11 +54,13 @@ public class MyLightBindingConstants {
     // List of all Thing Type UIDs beyond the bridge(s)
     public static final ThingTypeUID THING_TYPE_MYLIGHT_SMART_BATTERY = new ThingTypeUID(BINDING_ID,
             THING_MYLIGHT_SMART_BATTERY);
+    public static final ThingTypeUID THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS = new ThingTypeUID(BINDING_ID,
+            THING_MYLIGHT_VIRTUAL_COUNTERS);
 
     // Definitions of different set of Things
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_BRIDGE = new HashSet<>(Arrays.asList(THING_TYPE_BRIDGE));
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(
-            Arrays.asList(THING_TYPE_MYLIGHT_SMART_BATTERY));
+            Arrays.asList(THING_TYPE_MYLIGHT_SMART_BATTERY, THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS));
 
     // List of all channel ids
     public static final String CHANNEL_SMART_BATTERY_CHARGE_LEVEL = "charge-level";
@@ -62,6 +68,14 @@ public class MyLightBindingConstants {
     public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_CHARGE_ENERGY = "instantaneous-charge-energy";
     public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_DISCHARGE_ENERGY = "instantaneous-discharge-energy";
     public static final String CHANNEL_SMART_BATTERY_INSTANTANEOUS_LOSS_ENERGY = "instantaneous-loss-energy";
+
+    public static final String CHANNEL_VIRTUAL_COUNTERS_PRODUCED_ENERGY = "produced-energy";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_ELECTRICITY_METER_ENERGY = "electricity-meter-energy";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_TOTAL_ENERGY = "total-energy";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_GRID_ENERGY = "grid-energy";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_GREEN_ENERGY = "green-energy";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_AUTONOMY_RATE = "autonomy-rate";
+    public static final String CHANNEL_VIRTUAL_COUNTERS_SELF_CONSUMPTION = "self-consumption";
 
     /** Channel/Property identifier describing the current Bridge State. */
     public static final String PROPERTY_BRIDGE_API_VERSION = "apiVersion";
