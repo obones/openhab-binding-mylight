@@ -6,6 +6,6 @@
 	<type>binding</type>
 	<name>@text/addon.mylight.name</name>
 	<description>@text/addon.mylight.description</description>
-	<connection>local</connection>
+	<connection>cloud</connection>
 
 </addon:addon>
