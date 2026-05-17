@@ -43,4 +43,16 @@
 		<state pattern="%.1f %unit%" readOnly="true"/>
 	</channel-type>
 
+	<channel-type id="instantaneous-charge-energy">
+		<item-type>Number:Energy</item-type>
+		<label>@text/channel-type.mylight.smart-battery.instantaneous-charge-energy.label</label>
+		<description>@text/channel-type.mylight.smart-battery.instantaneous-charge-energy.description</description>
+		<category>Energy</category>
+		<tags>
+			<tag>Measurement</tag>
+			<tag>Energy</tag>
+		</tags>
+		<state pattern="%.4f %unit%" readOnly="true"/>
+	</channel-type>
+
 </thing:thing-descriptions>
