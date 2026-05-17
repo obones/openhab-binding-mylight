@@ -15,4 +15,5 @@ package com.obones.binding.mylight.internal.connection.api;
 public class MyLightSensorStateMeasure {
     public String type;
     public Double value;
+    public String unit;
 }

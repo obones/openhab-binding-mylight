@@ -32,6 +32,7 @@ import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.QuantityType;
+import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.Bridge;
 import org.openhab.core.thing.Channel;
 import org.openhab.core.thing.ChannelUID;
@@ -266,7 +267,12 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         for (Channel channel : getThing().getChannels()) {
             ChannelUID channelUID = channel.getUID();
             if (ChannelKind.STATE.equals(channel.getKind()) && isLinked(channelUID)) {
-                updateChannel(channelUID);
+                try {
+                    updateChannel(channelUID);
+                } catch (IllegalArgumentException e) {
+                    updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
+                            String.format("Channel {} : {}", channelUID.getAsString(), e.getMessage()));
+                }
             }
         }
     }
@@ -288,6 +294,18 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
 
         return null;
+    }
+
+    protected Unit<?> getUnit(MyLightSensorState sensorState) throws IllegalArgumentException {
+        switch (sensorState.measure.unit) {
+            case "Ws":
+                return Units.WATT_SECOND;
+            case "watt":
+            case "W":
+                return Units.WATT;
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported unit: {}", sensorState.measure.unit));
+        }
     }
 
     protected State getDecimalTypeState(@Nullable Number value) {

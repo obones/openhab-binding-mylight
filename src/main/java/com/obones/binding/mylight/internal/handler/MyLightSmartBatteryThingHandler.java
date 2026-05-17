@@ -15,9 +15,7 @@ package com.obones.binding.mylight.internal.handler;
 import static com.obones.binding.mylight.internal.MyLightBindingConstants.*;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.core.i18n.TimeZoneProvider;
-import org.openhab.core.library.unit.Units;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
@@ -25,11 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import com.obones.binding.mylight.internal.config.MyLightSmartBatteryThingConfiguration;
 import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
-import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /***
- * The{@link MyLightSmartBatteryThingHandler} is responsible for updating weather forecast related channels, which are
+ * The{@link MyLightSmartBatteryThingHandler} is responsible for updating smart battery related channels, which are
  * retrieved via {@link MyLightBridgeHandler}.
  *
  * @author Olivier Sannier - Initial contribution
@@ -56,17 +53,6 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
         }
 
         return result;
-    }
-
-    private @Nullable MyLightSensorState getSensorStateBySuffix(String suffix) {
-        if (deviceState != null) {
-            for (var sensorState : deviceState.sensorStates) {
-                if (sensorState.sensorId.endsWith(suffix))
-                    return sensorState;
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -109,7 +95,8 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
                     double maxStateOfCharge = 36e5 * batteryCapacity;
                     double boundedStateOfCharge = Math.min(stateOfCharge, maxStateOfCharge);
 
-                    updateState(channelUID, getQuantityTypeState(boundedStateOfCharge, Units.WATT_SECOND));
+                    updateState(channelUID,
+                            getQuantityTypeState(boundedStateOfCharge, getUnit(stateOfChargeSensorState)));
                     return;
                 }
                 break;
@@ -117,21 +104,21 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
                 var instantaneousChargeEnergySensorState = getSensorStateBySuffix("charge_energy");
                 if (instantaneousChargeEnergySensorState != null) {
                     updateState(channelUID, getQuantityTypeState(instantaneousChargeEnergySensorState.measure.value,
-                            Units.WATT_SECOND));
+                            getUnit(instantaneousChargeEnergySensorState)));
                 }
                 break;
             case CHANNEL_SMART_BATTERY_INSTANTANEOUS_DISCHARGE_ENERGY:
                 var instantaneousDischargeEnergySensorState = getSensorStateBySuffix("discharge_energy");
                 if (instantaneousDischargeEnergySensorState != null) {
                     updateState(channelUID, getQuantityTypeState(instantaneousDischargeEnergySensorState.measure.value,
-                            Units.WATT_SECOND));
+                            getUnit(instantaneousDischargeEnergySensorState)));
                 }
                 break;
             case CHANNEL_SMART_BATTERY_INSTANTANEOUS_LOSS_ENERGY:
                 var instantaneousLossEnergySensorState = getSensorStateBySuffix("loss_energy");
                 if (instantaneousLossEnergySensorState != null) {
-                    updateState(channelUID,
-                            getQuantityTypeState(instantaneousLossEnergySensorState.measure.value, Units.WATT_SECOND));
+                    updateState(channelUID, getQuantityTypeState(instantaneousLossEnergySensorState.measure.value,
+                            getUnit(instantaneousLossEnergySensorState)));
                 }
                 break;
             default:
