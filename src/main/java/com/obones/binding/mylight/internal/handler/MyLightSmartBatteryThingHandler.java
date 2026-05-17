@@ -77,6 +77,7 @@ public class MyLightSmartBatteryThingHandler extends MyLightBaseThingHandler {
     @Override
     protected void updateDeviceProperties(MyLightRoomDevice device) {
         batteryCapacity = device.batteryCapacity;
+        thing.setProperty(PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY, Double.toString(batteryCapacity));
     }
 
     /**
