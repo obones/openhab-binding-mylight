@@ -194,7 +194,9 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     }
 
     private boolean ensureValidAuthToken() {
-        if (lastAuthTokenDateTime.isBefore(ZonedDateTime.now().minusHours(AUTH_TOKEN_REFRESH_DELAY_HOURS))) {
+        var connection = this.connection;
+        if (connection != null
+                && lastAuthTokenDateTime.isBefore(ZonedDateTime.now().minusHours(AUTH_TOKEN_REFRESH_DELAY_HOURS))) {
             MyLightBridgeConfiguration config = getConfigAs(MyLightBridgeConfiguration.class);
 
             var loginResult = connection.login(config.email, config.password);
@@ -202,7 +204,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
                 updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
                 LoginReply reply = gson.fromJson(loginResult.serverReply, LoginReply.class);
 
-                if (reply.status.equals("ok")) {
+                if (reply != null && reply.status.equals("ok")) {
                     authToken = reply.authToken;
                     return true;
                 }
@@ -216,7 +218,8 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
     }
 
     private void updateThings() {
-        if (ensureValidAuthToken()) {
+        var connection = this.connection;
+        if (connection != null && ensureValidAuthToken()) {
             updateState(CHANNEL_BRIDGE_LAST_UPDATED, new DateTimeType(ZonedDateTime.now()));
             updateStatus(ThingStatus.ONLINE);
 
