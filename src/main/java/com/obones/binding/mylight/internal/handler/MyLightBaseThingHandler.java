@@ -240,10 +240,15 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
                         logger.error(e.getMessage());
                         updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, e.getMessage());
                     }
-                    break;
+                    return;
                 }
             }
         }
+
+        // if we reach this line, it's because we did not find the device in the rooms definition, no point in staying
+        // online as the thing will not be able to do anything
+        updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                String.format("Device %s was not found in MyLight rooms", config.deviceId));
     }
 
     /**
@@ -264,6 +269,11 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
                 result = true;
                 break;
             }
+        }
+
+        if (!result) {
+            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+                    String.format("Device %s was not found in MyLight states", config.deviceId));
         }
 
         var now = OffsetDateTime.now(ZoneOffset.UTC).withNano(0);
