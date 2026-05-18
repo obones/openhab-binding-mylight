@@ -19,27 +19,22 @@
 			<channel id="produced-energy" typeId="system.electric-energy">
 				<label>@text/channel.mylight.virtual-counters.produced-energy.label</label>
 				<description>@text/channel.mylight.virtual-counters.produced-energy.description</description>
-				<state pattern="%.4f %unit%" readOnly="true"/>
 			</channel>
 			<channel id="electricity-meter-energy" typeId="system.electric-energy">
 				<label>@text/channel.mylight.virtual-counters.electricity-meter-energy.label</label>
 				<description>@text/channel.mylight.virtual-counters.electricity-meter-energy.description</description>
-				<state pattern="%.4f %unit%" readOnly="true"/>
 			</channel>
 			<channel id="total-energy" typeId="system.electric-energy">
 				<label>@text/channel.mylight.virtual-counters.total-energy.label</label>
 				<description>@text/channel.mylight.virtual-counters.total-energy.description</description>
-				<state pattern="%.4f %unit%" readOnly="true"/>
 			</channel>
 			<channel id="green-energy" typeId="system.electric-energy">
 				<label>@text/channel.mylight.virtual-counters.green-energy.label</label>
 				<description>@text/channel.mylight.virtual-counters.green-energy.description</description>
-				<state pattern="%.4f %unit%" readOnly="true"/>
 			</channel>
 			<channel id="grid-energy" typeId="system.electric-energy">
 				<label>@text/channel.mylight.virtual-counters.grid-energy.label</label>
 				<description>@text/channel.mylight.virtual-counters.grid-energy.description</description>
-				<state pattern="%.4f %unit%" readOnly="true"/>
 			</channel>
 			<channel id="autonomy-rate" typeId="autonomy-rate"/>
 			<channel id="self-consumption" typeId="self-consumption"/>
