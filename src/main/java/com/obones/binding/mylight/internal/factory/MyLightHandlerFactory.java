@@ -22,7 +22,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
 import org.openhab.core.config.discovery.DiscoveryService;
 import org.openhab.core.i18n.LocaleProvider;
-import org.openhab.core.i18n.LocationProvider;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.i18n.TranslationProvider;
 import org.openhab.core.io.net.http.HttpClientFactory;
@@ -63,7 +62,6 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     private @NonNullByDefault({}) LocaleProvider localeProvider;
     private @NonNullByDefault({}) TranslationProvider i18nProvider;
     private TimeZoneProvider timeZoneProvider;
-    private final LocationProvider locationProvider;
     private Localization localization = Localization.UNKNOWN;
     private final HttpClient httpClient;
 
@@ -82,8 +80,8 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
 
         serviceAndRegistrations.remove(bridgeHandler);
 
-        MyLightDiscoveryService discoveryService = new MyLightDiscoveryService(bridgeHandler, locationProvider,
-                localeProvider, i18nProvider);
+        MyLightDiscoveryService discoveryService = new MyLightDiscoveryService(bridgeHandler, localeProvider,
+                i18nProvider);
         ServiceRegistration<?> discoveryServiceRegistration = bundleContext
                 .registerService(DiscoveryService.class.getName(), discoveryService, new Hashtable<>());
 
@@ -134,13 +132,11 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     public MyLightHandlerFactory(final @Reference LocaleProvider givenLocaleProvider,
             final @Reference TranslationProvider givenI18nProvider,
             final @Reference TimeZoneProvider givenTimeZoneProvider,
-            final @Reference LocationProvider givenLocationProvider,
             final @Reference HttpClientFactory httpClientFactory) {
         logger.trace("MyLightHandlerFactory(locale={},translation={}) called.", givenLocaleProvider, givenI18nProvider);
         localeProvider = givenLocaleProvider;
         i18nProvider = givenI18nProvider;
         timeZoneProvider = givenTimeZoneProvider;
-        locationProvider = givenLocationProvider;
         this.httpClient = httpClientFactory.getCommonHttpClient();
     }
 
