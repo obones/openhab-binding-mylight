@@ -123,21 +123,22 @@ public class MyLightDiscoveryService extends AbstractDiscoveryService {
             for (var room : rooms) {
                 for (var device : room.devices) {
                     String label = "MyLight - ".concat(device.name.replaceAll("\\P{Alnum}", "_"));
-                    @Nullable ThingTypeUID thingTypeUID = null;
 
-                    switch (device.type_id) {
+                    @Nullable
+                    ThingTypeUID thingTypeUID = switch (device.type_id) {
                         case "my_smart_battery":
-                            thingTypeUID = THING_TYPE_MYLIGHT_SMART_BATTERY;
-                            break;
-                    }
+                            yield THING_TYPE_MYLIGHT_SMART_BATTERY;
+                        default:
+                            yield null;
+                    };
 
                     if (thingTypeUID != null) {
-                        thingDiscovered(DiscoveryResultBuilder
-                                .create(new ThingUID(thingTypeUID, bridgeUID, device.device_id))
-                                .withThingType(thingTypeUID) //
-                                .withProperty(PROPERTY_THING_DEVICE_ID, device.device_id) //
-                                .withRepresentationProperty(PROPERTY_THING_DEVICE_ID) //
-                                .withLabel(label).withBridge(bridgeUID).build());
+                        thingDiscovered(
+                                DiscoveryResultBuilder.create(new ThingUID(thingTypeUID, bridgeUID, device.device_id))
+                                        .withThingType(thingTypeUID) //
+                                        .withProperty(PROPERTY_THING_DEVICE_ID, device.device_id) //
+                                        .withRepresentationProperty(PROPERTY_THING_DEVICE_ID) //
+                                        .withLabel(label).withBridge(bridgeUID).build());
                     }
                 }
             }
