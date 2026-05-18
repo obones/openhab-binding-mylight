@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyLight Binding -->
+<thing:thing-descriptions bindingId="mylight"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- -->
+	<!-- MyLight Water heater thing -->
+	<!-- -->
+	<thing-type id="water-heater">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="mylight"/>
+		</supported-bridge-type-refs>
+		<label>@text/thing-type.mylight.water-heater.label</label>
+		<description>@text/thing-type.mylight.water-heater.description</description>
+		<category>Electricity</category>
+		<channels>
+			<channel id="electric-power" typeId="system.electric-power"/>
+			<channel id="on-off" typeId="system.power"/>
+		</channels>
+		<properties>
+			<property name="vendor">MyLight</property>
+			<property name="id"/>
+			<property name="last-updated"/>
+		</properties>
+		<representation-property>id</representation-property>
+		<config-description-ref uri="thing-type:mylight:water-heater"/>
+	</thing-type>
+</thing:thing-descriptions>

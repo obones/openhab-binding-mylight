@@ -55,6 +55,7 @@ import com.google.gson.Gson;
 import com.obones.binding.mylight.internal.config.MyLightBaseThingConfiguration;
 import com.obones.binding.mylight.internal.connection.MyLightRoomsApiResponse;
 import com.obones.binding.mylight.internal.connection.MyLightStatesApiResponse;
+import com.obones.binding.mylight.internal.connection.api.MyLightActuatorState;
 import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
 import com.obones.binding.mylight.internal.connection.api.MyLightSensorState;
 import com.obones.binding.mylight.internal.connection.api.MyLightState;
@@ -298,6 +299,18 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         return null;
     }
 
+    protected @Nullable MyLightActuatorState getActuatorStateBySuffix(String suffix) {
+        var deviceState = this.deviceState;
+        if (deviceState != null) {
+            for (var actuatorState : deviceState.actuatorStates) {
+                if (actuatorState.actuatorId.endsWith(suffix))
+                    return actuatorState;
+            }
+        }
+
+        return null;
+    }
+
     protected Unit<?> getUnit(MyLightSensorState sensorState) throws IllegalArgumentException {
         switch (sensorState.measure.unit) {
             case "Ws":
@@ -332,5 +345,9 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
     protected State getOnOffState(@Nullable Float value) {
         return (value == null) ? UnDefType.UNDEF : (value == 1) ? OnOffType.ON : OnOffType.OFF;
+    }
+
+    protected State getOnOffState(@Nullable Boolean value) {
+        return (value == null) ? UnDefType.UNDEF : (value) ? OnOffType.ON : OnOffType.OFF;
     }
 }

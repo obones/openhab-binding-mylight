@@ -12,9 +12,8 @@
  */
 package com.obones.binding.mylight.internal.connection.api;
 
-public class MyLightRoomDevice {
-    public String device_id;
-    public String type_id;
-    public Double batteryCapacity;
-    public boolean has_actuator;
+import java.util.ArrayList;
+
+public class MyLightActuatorStates extends ArrayList<MyLightActuatorState> {
+
 }

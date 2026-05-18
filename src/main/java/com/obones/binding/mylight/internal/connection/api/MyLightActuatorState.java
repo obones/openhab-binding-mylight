@@ -12,9 +12,7 @@
  */
 package com.obones.binding.mylight.internal.connection.api;
 
-public class MyLightRoomDevice {
-    public String device_id;
-    public String type_id;
-    public Double batteryCapacity;
-    public boolean has_actuator;
+public class MyLightActuatorState {
+    public String actuatorId;
+    public MyLightActuatorStateState state;
 }

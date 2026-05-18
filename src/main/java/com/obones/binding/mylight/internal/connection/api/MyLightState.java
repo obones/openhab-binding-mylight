@@ -16,4 +16,5 @@ public class MyLightState {
     public String deviceId;
 
     public MyLightSensorStates sensorStates;
+    public MyLightActuatorStates actuatorStates;
 }

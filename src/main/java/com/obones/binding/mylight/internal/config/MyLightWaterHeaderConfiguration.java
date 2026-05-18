@@ -10,11 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.obones.binding.mylight.internal.connection.api;
+package com.obones.binding.mylight.internal.config;
 
-public class MyLightRoomDevice {
-    public String device_id;
-    public String type_id;
-    public Double batteryCapacity;
-    public boolean has_actuator;
+public class MyLightWaterHeaderConfiguration extends MyLightBaseThingConfiguration {
+    /*
+     * Default values - should not be modified
+     */
 }

@@ -48,6 +48,10 @@ public class MyLightBindingConstants {
      * The Thing identification of the power counters defined on the <B>MyLight</B> bridge.
      */
     private static final String THING_MYLIGHT_POWER_COUNTER = "power-counter";
+    /**
+     * The Thing identification of the water heater relays defined on the <B>MyLight</B> bridge.
+     */
+    private static final String THING_MYLIGHT_WATER_HEATER = "water-heater";
 
     // Discovered things id
     public static final String SYSTEM_LOCATION_THING_ID = "system";
@@ -62,11 +66,14 @@ public class MyLightBindingConstants {
             THING_MYLIGHT_VIRTUAL_COUNTERS);
     public static final ThingTypeUID THING_TYPE_MYLIGHT_POWER_COUNTER = new ThingTypeUID(BINDING_ID,
             THING_MYLIGHT_POWER_COUNTER);
+    public static final ThingTypeUID THING_TYPE_MYLIGHT_WATER_HEATER = new ThingTypeUID(BINDING_ID,
+            THING_MYLIGHT_WATER_HEATER);
 
     // Definitions of different set of Things
     public static final Set<ThingTypeUID> SUPPORTED_THINGS_BRIDGE = new HashSet<>(Arrays.asList(THING_TYPE_BRIDGE));
-    public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(Arrays.asList(
-            THING_TYPE_MYLIGHT_SMART_BATTERY, THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS, THING_TYPE_MYLIGHT_POWER_COUNTER));
+    public static final Set<ThingTypeUID> SUPPORTED_THINGS_ITEMS = new HashSet<>(
+            Arrays.asList(THING_TYPE_MYLIGHT_SMART_BATTERY, THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS,
+                    THING_TYPE_MYLIGHT_POWER_COUNTER, THING_TYPE_MYLIGHT_WATER_HEATER));
 
     // List of all channel ids
     public static final String CHANNEL_SMART_BATTERY_CHARGE_LEVEL = "charge-level";
@@ -84,6 +91,8 @@ public class MyLightBindingConstants {
     public static final String CHANNEL_VIRTUAL_COUNTERS_SELF_CONSUMPTION = "self-consumption";
 
     public static final String CHANNEL_BASE_POWER_COUNTER_ELECTRIC_POWER = "electric-power";
+
+    public static final String CHANNEL_WATER_HEATER_POWER = "on-off";
 
     /** Channel/Property identifier describing the current Bridge State. */
     public static final String PROPERTY_BRIDGE_API_VERSION = "apiVersion";

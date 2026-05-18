@@ -44,6 +44,7 @@ import com.obones.binding.mylight.internal.handler.MyLightBridgeHandler;
 import com.obones.binding.mylight.internal.handler.MyLightPowerCounterThingHandler;
 import com.obones.binding.mylight.internal.handler.MyLightSmartBatteryThingHandler;
 import com.obones.binding.mylight.internal.handler.MyLightVirtualCountersThingHandler;
+import com.obones.binding.mylight.internal.handler.MyLightWaterHeaterThingHandler;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /**
@@ -121,6 +122,12 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
         return new MyLightPowerCounterThingHandler(thing, localization, timeZoneProvider);
     }
 
+    private @Nullable ThingHandler createWaterHeaterThingHandler(Thing thing) {
+        logger.trace("createWaterHeaterThingHandler({}) called for thing named '{}'.", thing.getUID(),
+                thing.getLabel());
+        return new MyLightWaterHeaterThingHandler(thing, localization, timeZoneProvider);
+    }
+
     // Constructor
 
     @Activate
@@ -178,6 +185,8 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
             resultHandler = createVirtualCountersThingHandler(thing);
         } else if (THING_TYPE_MYLIGHT_POWER_COUNTER.equals(thingTypeUID)) {
             resultHandler = createPowerCounterThingHandler(thing);
+        } else if (THING_TYPE_MYLIGHT_WATER_HEATER.equals(thingTypeUID)) {
+            resultHandler = createWaterHeaterThingHandler(thing);
         } else {
             logger.warn("createHandler({}) failed: ThingHandler not found for {}.", thingTypeUID, thing.getLabel());
         }
