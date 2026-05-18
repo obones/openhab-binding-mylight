@@ -14,6 +14,8 @@ package com.obones.binding.mylight.internal.handler;
 
 import static com.obones.binding.mylight.internal.MyLightBindingConstants.*;
 
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.ChannelUID;
@@ -53,8 +55,8 @@ public class MyLightVirtualCountersThingHandler extends MyLightBaseThingHandler 
     }
 
     @Override
-    protected String getExpectedTypeId() {
-        return "virtual";
+    protected List<String> getExpectedTypeIds() {
+        return List.of("virtual");
     }
 
     /**

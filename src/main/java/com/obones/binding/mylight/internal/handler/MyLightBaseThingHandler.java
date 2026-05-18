@@ -19,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -200,13 +201,13 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         }
     }
 
-    protected abstract String getExpectedTypeId();
+    protected abstract List<String> getExpectedTypeIds();
 
     protected void ensureValidDevice(MyLightRoomDevice device) throws IllegalArgumentException {
-        var expectedTypeId = getExpectedTypeId();
-        if (!device.type_id.equals(expectedTypeId)) {
-            throw new IllegalArgumentException(String.format("Wrong type id for {}: expected {}, got {}",
-                    getThing().getUID(), expectedTypeId, device.type_id));
+        var expectedTypeIds = getExpectedTypeIds();
+        if (!expectedTypeIds.contains(device.type_id)) {
+            throw new IllegalArgumentException(String.format("Wrong type id for {}: expected one of {}, got {}",
+                    getThing().getUID(), expectedTypeIds.toString(), device.type_id));
         }
     }
 
