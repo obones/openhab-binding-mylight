@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import com.obones.binding.mylight.internal.discovery.MyLightDiscoveryService;
 import com.obones.binding.mylight.internal.handler.MyLightBridgeHandler;
+import com.obones.binding.mylight.internal.handler.MyLightPowerCounterThingHandler;
 import com.obones.binding.mylight.internal.handler.MyLightSmartBatteryThingHandler;
 import com.obones.binding.mylight.internal.handler.MyLightVirtualCountersThingHandler;
 import com.obones.binding.mylight.internal.utils.Localization;
@@ -114,6 +115,12 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
         return new MyLightVirtualCountersThingHandler(thing, localization, timeZoneProvider);
     }
 
+    private @Nullable ThingHandler createPowerCounterThingHandler(Thing thing) {
+        logger.trace("createPowerCounterThingHandler({}) called for thing named '{}'.", thing.getUID(),
+                thing.getLabel());
+        return new MyLightPowerCounterThingHandler(thing, localization, timeZoneProvider);
+    }
+
     // Constructor
 
     @Activate
@@ -169,6 +176,8 @@ public class MyLightHandlerFactory extends BaseThingHandlerFactory {
             resultHandler = createSmartBatteryThingHandler(thing);
         } else if (THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS.equals(thingTypeUID)) {
             resultHandler = createVirtualCountersThingHandler(thing);
+        } else if (THING_TYPE_MYLIGHT_POWER_COUNTER.equals(thingTypeUID)) {
+            resultHandler = createPowerCounterThingHandler(thing);
         } else {
             logger.warn("createHandler({}) failed: ThingHandler not found for {}.", thingTypeUID, thing.getLabel());
         }
