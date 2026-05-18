@@ -17,4 +17,5 @@ public class MyLightRoomDevice {
     public String type_id;
     public Double batteryCapacity;
     public boolean has_actuator;
+    public String name;
 }
