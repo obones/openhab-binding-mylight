@@ -197,7 +197,8 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     public void updateData(MyLightStatesApiResponse states) {
         if (storeDeviceState(states)) {
             updateChannels();
-            updateStatus(ThingStatus.ONLINE);
+            if (thing.getStatusInfo().getStatusDetail() != ThingStatusDetail.CONFIGURATION_ERROR)
+                updateStatus(ThingStatus.ONLINE);
         }
     }
 
