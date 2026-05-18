@@ -41,10 +41,10 @@
 		</channels>
 		<properties>
 			<property name="vendor">MyLight</property>
-			<property name="id"/>
+			<property name="device-id"/>
 			<property name="last-updated"/>
 		</properties>
-		<representation-property>id</representation-property>
+		<representation-property>device-id</representation-property>
 		<config-description-ref uri="thing-type:mylight:virtual-counters"/>
 	</thing-type>
 </thing:thing-descriptions>
