@@ -67,7 +67,7 @@ import com.obones.binding.mylight.internal.utils.Localization;
 @NonNullByDefault
 public abstract class MyLightBaseThingHandler extends BaseThingHandler {
 
-    protected @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBridgeHandler.class);
+    protected @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(MyLightBaseThingHandler.class);
     protected final TimeZoneProvider timeZoneProvider;
     protected static final Gson gson = new Gson();
     protected @Nullable MyLightState deviceState;
@@ -78,7 +78,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
         super(thing);
         this.localization = localization;
         this.timeZoneProvider = timeZoneProvider;
-        logger.trace("MyLightSmartBatteryHandler(thing={},localization={}) constructor called.", thing, localization);
+        logger.trace("MyLightBaseThingHandler(thing={},localization={}) constructor called.", thing, localization);
     }
 
     @Override

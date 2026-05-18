@@ -63,7 +63,7 @@ public class MyLightVirtualCountersThingHandler extends MyLightBaseThingHandler 
      * @param channelUID UID of the channel
      */
     protected void updateChannel(ChannelUID channelUID) {
-        logger.debug("MyLightSmartBatteryThingHandler: updateChannel {}", channelUID);
+        logger.debug("MyLightVirtualCountersThingHandler: updateChannel {}", channelUID);
 
         switch (channelUID.getId()) {
             case CHANNEL_VIRTUAL_COUNTERS_PRODUCED_ENERGY:
