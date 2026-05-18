@@ -250,6 +250,10 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         return ThingStatus.OFFLINE;
     }
 
+    public @Nullable MyLightRoomsApiResponse getRooms() {
+        return rooms;
+    }
+
     private boolean validateConfig(MyLightBridgeConfiguration config) {
         return (!config.baseURI.trim().isEmpty()) && //
                 (config.refreshInterval > 0) && //
