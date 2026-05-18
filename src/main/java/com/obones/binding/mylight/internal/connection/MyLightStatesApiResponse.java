@@ -18,4 +18,6 @@ import com.obones.binding.mylight.internal.connection.api.MyLightState;
 
 public class MyLightStatesApiResponse extends ArrayList<MyLightState> {
 
+    // keep compiler quiet
+    public static final long serialVersionUID = 20260518231000L;
 }

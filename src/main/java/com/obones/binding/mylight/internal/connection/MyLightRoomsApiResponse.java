@@ -18,4 +18,6 @@ import com.obones.binding.mylight.internal.connection.api.MyLightRoom;
 
 public class MyLightRoomsApiResponse extends ArrayList<MyLightRoom> {
 
+    // keep compiler quiet
+    public static final long serialVersionUID = 20260518231000L;
 }

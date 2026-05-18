@@ -16,4 +16,6 @@ import java.util.ArrayList;
 
 public class MyLightActuatorStates extends ArrayList<MyLightActuatorState> {
 
+    // keep compiler quiet
+    public static final long serialVersionUID = 20260518231000L;
 }

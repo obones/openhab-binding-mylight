@@ -16,4 +16,6 @@ import java.util.ArrayList;
 
 public class MyLightRoomDevices extends ArrayList<MyLightRoomDevice> {
 
+    // keep compiler quiet
+    public static final long serialVersionUID = 20260518231000L;
 }
