@@ -23,7 +23,6 @@ import org.openhab.core.thing.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.obones.binding.mylight.internal.config.MyLightSmartBatteryThingConfiguration;
 import com.obones.binding.mylight.internal.utils.Localization;
 
 /***
@@ -40,18 +39,6 @@ public class MyLightVirtualCountersThingHandler extends MyLightBaseThingHandler 
             final TimeZoneProvider timeZoneProvider) {
         super(thing, localization, timeZoneProvider);
         logger.trace("MyLightSmartBatteryHandler(thing={},localization={}) constructor called.", thing, localization);
-    }
-
-    @Override
-    protected synchronized boolean validateConfig() {
-        boolean result = super.validateConfig();
-
-        if (result) {
-            MyLightSmartBatteryThingConfiguration config = getConfigAs(MyLightSmartBatteryThingConfiguration.class);
-
-        }
-
-        return result;
     }
 
     @Override
