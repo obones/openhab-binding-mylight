@@ -206,8 +206,8 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     protected void ensureValidDevice(MyLightRoomDevice device) throws IllegalArgumentException {
         var expectedTypeIds = getExpectedTypeIds();
         if (!expectedTypeIds.contains(device.type_id)) {
-            throw new IllegalArgumentException(String.format("Wrong type id for {}: expected one of {}, got {}",
-                    getThing().getUID(), expectedTypeIds.toString(), device.type_id));
+            throw new IllegalArgumentException(String.format("Wrong type id for %s: expected one of %s, got %s",
+                    device.device_id, expectedTypeIds.toString(), device.type_id));
         }
     }
 
@@ -272,7 +272,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
                     updateChannel(channelUID);
                 } catch (IllegalArgumentException e) {
                     updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-                            String.format("Channel {} : {}", channelUID.getAsString(), e.getMessage()));
+                            String.format("Channel %s : %s", channelUID.getAsString(), e.getMessage()));
                 }
             }
         }
@@ -305,7 +305,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
             case "W":
                 return Units.WATT;
             default:
-                throw new IllegalArgumentException(String.format("Unsupported unit: {}", sensorState.measure.unit));
+                throw new IllegalArgumentException(String.format("Unsupported unit: %s", sensorState.measure.unit));
         }
     }
 
