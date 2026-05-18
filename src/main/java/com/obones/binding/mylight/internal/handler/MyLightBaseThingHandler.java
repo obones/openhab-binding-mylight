@@ -214,6 +214,7 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
     }
 
     protected void updateDeviceProperties(MyLightRoomDevice device) {
+        thing.setProperty(PROPERTY_THING_DEVICE_ID, device.device_id);
     }
 
     public void updateDeviceProperties(MyLightRoomsApiResponse rooms) {
