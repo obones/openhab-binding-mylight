@@ -233,7 +233,7 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
         }
     }
 
-    private ThingStatus updateThing(@Nullable MyLightBaseThingHandler handler, Thing thing) {
+    public ThingStatus updateThing(@Nullable MyLightBaseThingHandler handler, Thing thing) {
         if (this.getThing().getStatus().equals(ThingStatus.ONLINE) && handler != null
                 && ThingHandlerHelper.isHandlerInitialized(handler)) {
 

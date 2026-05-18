@@ -150,6 +150,14 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
             dispose();
             updateConfiguration(configuration);
             initialize();
+
+            var bridge = getBridge();
+            if (bridge != null) {
+                var bridgeHandler = bridge.getHandler();
+                if (bridgeHandler != null) {
+                    ((MyLightBridgeHandler) bridgeHandler).updateThing(this, thing);
+                }
+            }
         } else {
             super.handleConfigurationUpdate(configurationParameters);
         }
