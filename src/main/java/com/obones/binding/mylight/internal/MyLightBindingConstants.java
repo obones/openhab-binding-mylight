@@ -99,7 +99,9 @@ public class MyLightBindingConstants {
 
     // Thing properties
     public static final String PROPERTY_THING_LAST_UPDATED = "last-updated";
-    public static final String PROPERTY_THING_DEVICE_ID = "device-id";
+
+    // not "device-id" for it to match the config parameter
+    public static final String PROPERTY_THING_DEVICE_ID = "deviceId";
 
     // SmartBattery thing properties
     public static final String PROPERTY_SMART_BATTERY_SUBSCRIBED_CAPACITY = "subscribed-capacity";

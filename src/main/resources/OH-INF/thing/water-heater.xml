@@ -21,7 +21,7 @@
 		</channels>
 		<properties>
 			<property name="vendor">MyLight</property>
-			<property name="device-id"/>
+			<property name="deviceId"/>
 			<property name="last-updated"/>
 		</properties>
 		<representation-property>device-id</representation-property>

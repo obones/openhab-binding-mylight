@@ -33,7 +33,7 @@
 		</channels>
 		<properties>
 			<property name="vendor">MyLight</property>
-			<property name="device-id"/>
+			<property name="deviceId"/>
 			<property name="subscribed-capacity"/>
 			<property name="last-updated"/>
 			<property name="thingTypeVersion">1</property>
