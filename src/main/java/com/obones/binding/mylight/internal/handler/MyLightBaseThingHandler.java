@@ -193,11 +193,15 @@ public abstract class MyLightBaseThingHandler extends BaseThingHandler {
             } else {
                 if (command instanceof RefreshType) {
                     updateChannel(channelUID);
-                } else {
-                    logger.debug("The MyLight binding is a read-only binding and cannot handle command '{}'.", command);
+                } else if (!handleActionCommand(handler, channelUID, command)) {
+                    logger.debug("MyLight thing {} cannot handle command '{}'.", thing.getUID(), command);
                 }
             }
         }
+    }
+
+    protected boolean handleActionCommand(BridgeHandler bridgeHandler, ChannelUID channelUID, Command command) {
+        return false;
     }
 
     /**
