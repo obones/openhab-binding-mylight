@@ -37,6 +37,6 @@ public class MyLightPowerCounterThingHandler extends MyLightBasePowerCounterThin
 
     @Override
     protected List<String> getExpectedTypeIds() {
-        return List.of("production_counter", "asoka_electric_counter");
+        return List.of("production_counter", "asoka_electric_counter", "asoka_red_plug");
     }
 }
