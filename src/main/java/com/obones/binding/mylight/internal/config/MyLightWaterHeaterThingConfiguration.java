@@ -12,10 +12,7 @@
  */
 package com.obones.binding.mylight.internal.config;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
-
-@NonNullByDefault
-public class MyLightPowerCounterConfiguration extends MyLightBaseThingConfiguration {
+public class MyLightWaterHeaterThingConfiguration extends MyLightBaseThingConfiguration {
     /*
      * Default values - should not be modified
      */
