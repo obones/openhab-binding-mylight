@@ -14,6 +14,8 @@ package com.obones.binding.mylight.internal.connection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -27,6 +29,8 @@ import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.openhab.core.library.types.OnOffType;
+import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,13 +120,18 @@ public class MyLightHttpConnection implements MyLightConnection {
         }
     }
 
-    private @Nullable JsonObject getApiResult(String authToken, String path) {
+    private @Nullable JsonObject getApiResult(String authToken, String path,
+            @Nullable Map<String, String> extraQueryParameters) {
 
         URI uri = getUri();
         if (uri == null)
             return null;
 
         UriBuilder builder = prepareUriBuilder(uri, authToken, path);
+
+        if (extraQueryParameters != null)
+            for (Map.Entry<String, String> entry : extraQueryParameters.entrySet())
+                builder.queryParam(entry.getKey(), entry.getValue());
 
         try {
             ContentResponse response = getResponse(builder);
@@ -141,6 +150,10 @@ public class MyLightHttpConnection implements MyLightConnection {
         }
 
         return null;
+    }
+
+    private @Nullable JsonObject getApiResult(String authToken, String path) {
+        return getApiResult(authToken, path, null);
     }
 
     public MyLightRoomsApiResponse getRooms(String authToken) {
@@ -170,5 +183,13 @@ public class MyLightHttpConnection implements MyLightConnection {
         }
 
         return new MyLightStatesApiResponse();
+    }
+
+    public void setRelayState(String authToken, String deviceId, Command command) {
+        var parameters = new HashMap<String, String>();
+        parameters.put("id", deviceId);
+        parameters.put("on", command == OnOffType.ON ? "true" : "false");
+
+        getApiResult(authToken, "device/switch", parameters);
     }
 }

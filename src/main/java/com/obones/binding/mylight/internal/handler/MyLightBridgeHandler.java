@@ -263,4 +263,10 @@ public class MyLightBridgeHandler extends BaseBridgeHandler {
                 (!config.email.trim().isEmpty()) && //
                 (!config.password.trim().isEmpty());
     }
+
+    public void setRelayState(String deviceId, Command command) {
+        var connection = this.connection;
+        if (connection != null && ensureValidAuthToken())
+            connection.setRelayState(authToken, deviceId, command);
+    }
 }

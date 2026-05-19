@@ -13,6 +13,7 @@
 package com.obones.binding.mylight.internal.connection;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.openhab.core.types.Command;
 
 /**
  * The {@link MyLightConnection} represents a connection to the MyLight API and provides answers
@@ -36,4 +37,6 @@ public interface MyLightConnection {
     MyLightRoomsApiResponse getRooms(String authToken);
 
     MyLightStatesApiResponse getStates(String authToken);
+
+    void setRelayState(String authToken, String deviceId, Command command);
 }
