@@ -122,12 +122,20 @@ public class MyLightDiscoveryService extends AbstractDiscoveryService {
         if (rooms != null) {
             for (var room : rooms) {
                 for (var device : room.devices) {
-                    String label = "MyLight - ".concat(device.name.replaceAll("\\P{Alnum}", "_"));
+                    String label = "MyLight - ".concat(device.name);
 
                     @Nullable
                     ThingTypeUID thingTypeUID = switch (device.type_id) {
                         case "my_smart_battery":
                             yield THING_TYPE_MYLIGHT_SMART_BATTERY;
+                        case "virtual":
+                            yield THING_TYPE_MYLIGHT_VIRTUAL_COUNTERS;
+                        case "asoka_red_plug":
+                        case "asoka_electric_counter":
+                        case "production_counter":
+                            yield THING_TYPE_MYLIGHT_POWER_COUNTER;
+                        case "water_heater":
+                            yield (device.has_actuator) ? THING_TYPE_MYLIGHT_WATER_HEATER : null;
                         default:
                             yield null;
                     };
