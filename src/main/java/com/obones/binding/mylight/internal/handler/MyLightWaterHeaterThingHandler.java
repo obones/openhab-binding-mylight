@@ -20,9 +20,12 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.openhab.core.i18n.TimeZoneProvider;
 import org.openhab.core.thing.ChannelUID;
 import org.openhab.core.thing.Thing;
+import org.openhab.core.thing.binding.BridgeHandler;
+import org.openhab.core.types.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.obones.binding.mylight.internal.config.MyLightWaterHeaterThingConfiguration;
 import com.obones.binding.mylight.internal.connection.api.MyLightRoomDevice;
 import com.obones.binding.mylight.internal.utils.Localization;
 
@@ -70,5 +73,17 @@ public class MyLightWaterHeaterThingHandler extends MyLightBasePowerCounterThing
             default:
                 super.updateChannel(channelUID);
         }
+    }
+
+    @Override
+    protected boolean handleActionCommand(BridgeHandler bridgeHandler, ChannelUID channelUID, Command command) {
+        var config = getConfigAs(MyLightWaterHeaterThingConfiguration.class);
+
+        switch (channelUID.getId()) {
+            case CHANNEL_WATER_HEATER_POWER:
+                ((MyLightBridgeHandler) bridgeHandler).setRelayState(config.deviceId, command);
+                return true;
+        }
+        return super.handleActionCommand(bridgeHandler, channelUID, command);
     }
 }
