@@ -12,8 +12,11 @@
  */
 package com.obones.binding.mylight.internal.connection.api;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 public class MyLightRoomDevice {
-    public String device_id;
+    @NonNull
+    public String device_id = "";
     public String type_id;
     public Double batteryCapacity;
     public boolean has_actuator;
