@@ -14,8 +14,9 @@ package com.obones.binding.mylight.internal.factory;
 
 import static com.obones.binding.mylight.internal.MyLightBindingConstants.*;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
@@ -57,7 +58,7 @@ import com.obones.binding.mylight.internal.utils.Localization;
 public class MyLightHandlerFactory extends BaseThingHandlerFactory {
     private @NonNullByDefault({}) final Logger logger = LoggerFactory.getLogger(ThingHandlerFactory.class);
 
-    private Dictionary<MyLightBridgeHandler, MyLightDiscoveryServiceAndRegistration> serviceAndRegistrations = new Hashtable<>();
+    private Map<MyLightBridgeHandler, MyLightDiscoveryServiceAndRegistration> serviceAndRegistrations = new HashMap<>();
 
     private @NonNullByDefault({}) LocaleProvider localeProvider;
     private @NonNullByDefault({}) TranslationProvider i18nProvider;
