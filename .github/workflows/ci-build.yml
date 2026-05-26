@@ -1,4 +1,4 @@
-name: Build AirZone binding
+name: Build MyLight binding
 
 on:
   workflow_dispatch:
@@ -7,7 +7,8 @@ on:
 jobs:
   build:
     env:
-      addon-path: 'openhab-addons/bundles/com.obones.binding.airzone'
+      jar-base-name: 'com.obones.binding.mylight'
+      addon-path: 'openhab-addons/bundles/com.obones.binding.mylight'
       is-release: ${{ startsWith(github.ref, 'refs/tags/v') }}
     strategy:
       fail-fast: false
@@ -82,15 +83,15 @@ jobs:
         uses: actions/upload-artifact@v7
         if: env.is-release == 'true'
         with:
-          name: com.obones.binding.airzone-openhab_${{ matrix.addons-ref }}-java_${{ matrix.java }}
+          name: ${{ env.jar-base-name }}-openhab_${{ matrix.addons-ref }}-java_${{ matrix.java }}
           path: |
-            ${{ env.addon-path }}/target/com.obones.binding.airzone*.jar
-            !${{ env.addon-path }}/target/com.obones.binding.airzone*-sources.jar
+            ${{ env.addon-path }}/target/${{ env.jar-base-name }}*.jar
+            !${{ env.addon-path }}/target/${{ env.jar-base-name }}*-sources.jar
 
       - name: Create attestation
         uses: actions/attest@v4
         if: env.is-release == 'true'
         with:
           subject-path: |
-            ${{ env.addon-path }}/target/com.obones.binding.airzone*.jar
-            !${{ env.addon-path }}/target/com.obones.binding.airzone*-sources.jar
+            ${{ env.addon-path }}/target/${{ env.jar-base-name }}*.jar
+            !${{ env.addon-path }}/target/${{ env.jar-base-name }}*-sources.jar
